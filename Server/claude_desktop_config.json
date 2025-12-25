@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "habit-timer": {
+      "command": "ssh",
+      "args": [
+        "your-vps-user@your-vps-ip",
+        "docker", "exec", "-i", "habit-sync", "python", "main.py"
+      ]
+    }
+  }
+}
