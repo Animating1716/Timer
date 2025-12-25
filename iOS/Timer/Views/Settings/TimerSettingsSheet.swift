@@ -43,24 +43,6 @@ struct TimerSettingsSheet: View {
                     Text("Statistik")
                 }
 
-                // Timer Increment (for selected habit)
-                if let habit = timerVM.selectedHabit {
-                    Section {
-                        Stepper(
-                            "Inkrement: \(habit.timerIncrement)s",
-                            value: Binding(
-                                get: { habit.timerIncrement },
-                                set: { habit.timerIncrement = $0 }
-                            ),
-                            in: 1...60
-                        )
-                    } header: {
-                        Text("Timer-Einstellungen")
-                    } footer: {
-                        Text("Zeit die nach jeder Session hinzugefügt wird")
-                    }
-                }
-
                 // Reset
                 Section {
                     Button(role: .destructive) {
