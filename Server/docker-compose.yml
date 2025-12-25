@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  habit-sync:
+    build: .
+    container_name: habit-sync
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - habit-data:/data/habits
+    environment:
+      - SYNC_API_KEY=${SYNC_API_KEY:-change-me}
+      - HABIT_DATA_DIR=/data/habits
+    networks:
+      - proxy-network
+
+  # MCP Server runs separately via stdio
+  # Use: docker exec -it habit-sync python main.py
+
+volumes:
+  habit-data:
+
+networks:
+  proxy-network:
+    external: true

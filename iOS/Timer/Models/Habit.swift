@@ -1,0 +1,101 @@
+import Foundation
+import SwiftUI
+import SwiftData
+
+@Model
+final class Habit {
+    var id: UUID
+    var name: String
+    var icon: String // SF Symbol name
+    var colorHex: String
+    var dailyGoal: Int
+    var hasTimer: Bool
+    var timerIncrement: Int // Seconds to add per session
+    var currentTimerDuration: Int // Current timer duration in seconds
+    var linkedToExercise: Bool // Auto-complete on timer finish
+    var sortOrder: Int
+    var createdAt: Date
+
+    init(
+        name: String,
+        icon: String = "circle.fill",
+        colorHex: String = "#FF6B6B",
+        dailyGoal: Int = 1,
+        hasTimer: Bool = false,
+        timerIncrement: Int = 10,
+        currentTimerDuration: Int = 180,
+        sortOrder: Int = 0
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.icon = icon
+        self.colorHex = colorHex
+        self.dailyGoal = dailyGoal
+        self.hasTimer = hasTimer
+        self.timerIncrement = timerIncrement
+        self.currentTimerDuration = currentTimerDuration
+        self.linkedToExercise = false
+        self.sortOrder = sortOrder
+        self.createdAt = Date()
+    }
+
+    var color: Color {
+        Color(hex: colorHex) ?? .red
+    }
+}
+
+// MARK: - Color Extension
+extension Color {
+    init?(hex: String) {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+
+        var rgb: UInt64 = 0
+        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
+
+        let r = Double((rgb & 0xFF0000) >> 16) / 255.0
+        let g = Double((rgb & 0x00FF00) >> 8) / 255.0
+        let b = Double(rgb & 0x0000FF) / 255.0
+
+        self.init(red: r, green: g, blue: b)
+    }
+
+    func toHex() -> String {
+        guard let components = UIColor(self).cgColor.components else { return "#FF6B6B" }
+        let r = Int(components[0] * 255)
+        let g = Int(components[1] * 255)
+        let b = Int(components[2] * 255)
+        return String(format: "#%02X%02X%02X", r, g, b)
+    }
+}
+
+// MARK: - Preset Colors
+extension Habit {
+    static let presetColors: [(name: String, hex: String)] = [
+        ("Olive", "#808000"),
+        ("Red", "#8B0000"),
+        ("Purple", "#4A4A6A"),
+        ("Brown", "#6B4423"),
+        ("Blue", "#4A90D9"),
+        ("Green", "#2D8B4A"),
+        ("Orange", "#D97B4A"),
+        ("Pink", "#D94A8B")
+    ]
+
+    static let presetIcons: [String] = [
+        "cup.and.saucer.fill",
+        "figure.run",
+        "figure.mind.and.body",
+        "brain.head.profile",
+        "book.fill",
+        "drop.fill",
+        "pill.fill",
+        "bed.double.fill",
+        "sunrise.fill",
+        "moon.fill",
+        "leaf.fill",
+        "heart.fill",
+        "star.fill",
+        "bolt.fill"
+    ]
+}
