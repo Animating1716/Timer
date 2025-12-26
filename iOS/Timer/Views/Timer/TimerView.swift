@@ -199,7 +199,7 @@ struct TimerView: View {
         guard let habit = notification.object as? Habit else { return }
 
         // Trigger haptics/sound based on settings
-        HapticsService.shared.trigger(for: settings.signal)
+        HapticsService.shared.trigger(for: settings.signal, sound: settings.sound, volume: settings.soundVolume)
 
         // Complete the habit
         habitsVM.completeTimerHabit(

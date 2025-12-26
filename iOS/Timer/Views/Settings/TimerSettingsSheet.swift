@@ -24,6 +24,32 @@ struct TimerSettingsSheet: View {
                     Text("Signalart")
                 }
 
+                // Sound Selection (only show if sound is enabled)
+                if settings.signal != .vibrationOnly {
+                    Section {
+                        ForEach(TimerSound.allCases, id: \.self) { sound in
+                            Button {
+                                settings.sound = sound
+                                HapticsService.shared.previewSound(sound)
+                            } label: {
+                                HStack {
+                                    Text(sound.displayName)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    if settings.sound == sound {
+                                        Image(systemName: "checkmark")
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                            }
+                        }
+                    } header: {
+                        Text("Ton")
+                    } footer: {
+                        Text("Lautstärke über iPhone-Tasten einstellen")
+                    }
+                }
+
                 // Statistics
                 Section {
                     HStack {
@@ -69,7 +95,7 @@ struct TimerSettingsSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
     }
 

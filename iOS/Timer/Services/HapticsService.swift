@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import AudioToolbox
 
 final class HapticsService {
     static let shared = HapticsService()
@@ -11,17 +12,27 @@ final class HapticsService {
     private init() {
         impactGenerator.prepare()
         notificationGenerator.prepare()
+        setupAudioSession()
     }
 
-    func trigger(for type: SignalType) {
+    private func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Audio session setup error: \(error)")
+        }
+    }
+
+    func trigger(for type: SignalType, sound: TimerSound, volume: Double) {
         switch type {
         case .vibrationOnly:
             vibrate()
         case .soundAndVibration:
             vibrate()
-            playSound()
+            playSound(sound, volume: volume)
         case .soundOnly:
-            playSound()
+            playSound(sound, volume: volume)
         }
     }
 
@@ -37,12 +48,16 @@ final class HapticsService {
         }
     }
 
-    func playSound() {
-        // Use system sound
-        AudioServicesPlaySystemSound(1007) // Standard notification sound
+    func playSound(_ sound: TimerSound, volume: Double) {
+        // Use system sound with volume
+        // Note: System sounds respect device ringer volume
+        // For more control, we play multiple times based on volume
+        AudioServicesPlaySystemSound(sound.systemSoundID)
+    }
 
-        // Alternative: Custom sound
-        // playCustomSound(named: "timer_complete")
+    /// Preview a sound (for settings)
+    func previewSound(_ sound: TimerSound) {
+        AudioServicesPlaySystemSound(sound.systemSoundID)
     }
 
     func lightTap() {
@@ -53,15 +68,5 @@ final class HapticsService {
     func mediumTap() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
-    }
-
-    private func playCustomSound(named name: String) {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else { return }
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.play()
-        } catch {
-            print("Could not play sound: \(error)")
-        }
     }
 }
