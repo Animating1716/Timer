@@ -6,7 +6,7 @@ import CloudKit
 final class CloudKitService {
     static let shared = CloudKitService()
 
-    private let container = CKContainer(identifier: "iCloud.com.yourname.HabitTimer") // Change to your bundle ID
+    private let container = CKContainer(identifier: "iCloud.com.joshua.HabitTimer")
     private var publicDatabase: CKDatabase { container.publicCloudDatabase }
 
     private init() {}

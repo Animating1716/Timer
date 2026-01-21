@@ -20,8 +20,12 @@ struct TimerSettingsSheet: View {
                     }
                     .pickerStyle(.segmented)
                     .listRowBackground(Color.clear)
+
+                    Toggle("Halbzeit-Signal", isOn: $settings.halfwaySignalEnabled)
                 } header: {
                     Text("Signalart")
+                } footer: {
+                    Text("Bei aktiviertem Halbzeit-Signal ertönt zur Hälfte der Zeit ein Signal")
                 }
 
                 // Statistics

@@ -3,12 +3,12 @@ import SwiftData
 
 @Model
 final class HabitLog {
-    var id: UUID
-    var habitId: UUID
-    var date: Date // Normalized to start of day
-    var count: Int // How many times completed today
-    var timerSeconds: Int // Total timer seconds for today (for timer habits)
-    var completedAt: Date? // When last marked complete
+    var id: UUID = UUID()
+    var habitId: UUID = UUID()
+    var date: Date = Date()
+    var count: Int = 0
+    var timerSeconds: Int = 0
+    var completedAt: Date?
 
     init(habitId: UUID, date: Date = Date()) {
         self.id = UUID()

@@ -4,17 +4,17 @@ import SwiftData
 
 @Model
 final class Habit {
-    var id: UUID
-    var name: String
-    var icon: String // SF Symbol name
-    var colorHex: String
-    var dailyGoal: Int
-    var hasTimer: Bool
-    var timerIncrement: Int // Seconds to add per session
-    var currentTimerDuration: Int // Current timer duration in seconds
-    var linkedToExercise: Bool // Auto-complete on timer finish
-    var sortOrder: Int
-    var createdAt: Date
+    var id: UUID = UUID()
+    var name: String = ""
+    var icon: String = "circle.fill"
+    var colorHex: String = "#FF6B6B"
+    var dailyGoal: Int = 1
+    var hasTimer: Bool = false
+    var timerIncrement: Int = 10
+    var currentTimerDuration: Int = 180
+    var linkedToExercise: Bool = false
+    var sortOrder: Int = 0
+    var createdAt: Date = Date()
 
     init(
         name: String,

@@ -12,7 +12,7 @@ struct HabitsView: View {
     @State private var showNewHabit = false
     @State private var showSettings = false
     @State private var habitToEdit: Habit?
-    @State private var navigateToTimer = false
+    @State private var showTimer = false
 
     var body: some View {
         ZStack {
@@ -40,7 +40,7 @@ struct HabitsView: View {
                                 },
                                 onTimerTap: habit.hasTimer ? {
                                     timerVM.selectHabit(habit)
-                                    navigateToTimer = true
+                                    showTimer = true
                                 } : nil
                             )
                             .onTapGesture {
@@ -63,15 +63,12 @@ struct HabitsView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 16)
-                    .padding(.bottom, 100)
+                    .padding(.bottom, 20)
                 }
 
                 Spacer()
-            }
 
-            // Bottom bar
-            VStack {
-                Spacer()
+                // Bottom bar
                 bottomBar
             }
         }
@@ -84,12 +81,8 @@ struct HabitsView: View {
         .sheet(isPresented: $showSettings) {
             HabitSettingsSheet()
         }
-        .onChange(of: navigateToTimer) { _, newValue in
-            if newValue {
-                // This will be handled by parent TabView
-                NotificationCenter.default.post(name: .switchToTimerTab, object: nil)
-                navigateToTimer = false
-            }
+        .fullScreenCover(isPresented: $showTimer) {
+            TimerView(timerVM: timerVM, habitsVM: habitsVM)
         }
     }
 

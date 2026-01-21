@@ -17,15 +17,17 @@ enum SignalType: String, Codable, CaseIterable {
 
 @Model
 final class AppSettings {
-    var id: UUID
-    var signalType: String // SignalType raw value
+    var id: UUID = UUID()
+    var signalType: String = SignalType.soundAndVibration.rawValue
+    var halfwaySignalEnabled: Bool = true
     var selectedHabitIdForTimer: UUID?
-    var totalTimerSeconds: Int // Gesamtzeit aller Timer Sessions
+    var totalTimerSeconds: Int = 0
     var lastSyncDate: Date?
 
     init() {
         self.id = UUID()
         self.signalType = SignalType.soundAndVibration.rawValue
+        self.halfwaySignalEnabled = true
         self.selectedHabitIdForTimer = nil
         self.totalTimerSeconds = 0
         self.lastSyncDate = nil

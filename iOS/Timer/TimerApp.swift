@@ -13,7 +13,7 @@ struct TimerApp: App {
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false,
-            cloudKitDatabase: .private("iCloud.com.yourname.HabitTimer") // Change to your bundle ID
+            cloudKitDatabase: .none  // Local storage only for now
         )
 
         do {

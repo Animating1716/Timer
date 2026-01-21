@@ -3,7 +3,7 @@ import SwiftData
 
 struct TimerView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var habits: [Habit]
+    @Environment(\.dismiss) private var dismiss
     @Query private var logs: [HabitLog]
     @Query private var settingsArray: [AppSettings]
 
@@ -11,14 +11,9 @@ struct TimerView: View {
     @Bindable var habitsVM: HabitsViewModel
 
     @State private var showSettings = false
-    @State private var showHabitPicker = false
 
     private var settings: AppSettings {
         settingsArray.first ?? AppSettings()
-    }
-
-    private var timerHabits: [Habit] {
-        habits.filter { $0.hasTimer }.sorted { $0.sortOrder < $1.sortOrder }
     }
 
     var body: some View {
@@ -28,26 +23,20 @@ struct TimerView: View {
             VStack(spacing: 0) {
                 // Header
                 HStack {
-                    if timerHabits.count > 1 {
-                        Button {
-                            showHabitPicker = true
-                        } label: {
-                            HStack(spacing: 8) {
-                                if let habit = timerVM.selectedHabit {
-                                    Image(systemName: habit.icon)
-                                        .foregroundColor(habit.color)
-                                    Text(habit.name)
-                                        .foregroundColor(.white)
-                                } else {
-                                    Text("Timer wählen")
-                                        .foregroundColor(.gray)
-                                }
-                                Image(systemName: "chevron.down")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    } else if let habit = timerVM.selectedHabit {
+                    // Close button
+                    Button {
+                        timerVM.stopTimer()
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.title2)
+                            .foregroundColor(.gray)
+                    }
+
+                    Spacer()
+
+                    // Habit name
+                    if let habit = timerVM.selectedHabit {
                         HStack(spacing: 8) {
                             Image(systemName: habit.icon)
                                 .foregroundColor(habit.color)
@@ -96,7 +85,7 @@ struct TimerView: View {
 
                 // Play/Pause Button
                 playPauseButton
-                    .padding(.bottom, 60)
+                    .padding(.bottom, 20)
             }
         }
         .sheet(isPresented: $showSettings) {
@@ -105,12 +94,9 @@ struct TimerView: View {
                 timerVM: timerVM
             )
         }
-        .sheet(isPresented: $showHabitPicker) {
-            habitPickerSheet
-        }
         .onAppear {
             ensureSettings()
-            selectInitialHabit()
+            timerVM.settings = settings
         }
         .onReceive(NotificationCenter.default.publisher(for: .timerCompleted)) { notification in
             handleTimerCompleted(notification)
@@ -143,55 +129,11 @@ struct TimerView: View {
         .opacity(timerVM.selectedHabit == nil ? 0.5 : 1)
     }
 
-    @ViewBuilder
-    private var habitPickerSheet: some View {
-        NavigationStack {
-            List(timerHabits) { habit in
-                Button {
-                    timerVM.selectHabit(habit)
-                    showHabitPicker = false
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: habit.icon)
-                            .foregroundColor(habit.color)
-                            .frame(width: 24)
-
-                        Text(habit.name)
-                            .foregroundColor(.primary)
-
-                        Spacer()
-
-                        if timerVM.selectedHabit?.id == habit.id {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("Timer wählen")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Fertig") {
-                        showHabitPicker = false
-                    }
-                }
-            }
-        }
-        .presentationDetents([.medium])
-    }
-
     private func ensureSettings() {
         if settingsArray.isEmpty {
             let newSettings = AppSettings()
             modelContext.insert(newSettings)
             try? modelContext.save()
-        }
-    }
-
-    private func selectInitialHabit() {
-        if timerVM.selectedHabit == nil, let first = timerHabits.first {
-            timerVM.selectHabit(first)
         }
     }
 

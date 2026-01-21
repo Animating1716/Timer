@@ -9,6 +9,9 @@ final class TimerViewModel {
     var timeRemaining: Int = 0
     var isRunning: Bool = false
     var isPaused: Bool = false
+    var halfwaySignalTriggered: Bool = false
+
+    var settings: AppSettings?
 
     private var timer: Timer?
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -35,6 +38,7 @@ final class TimerViewModel {
         stopTimer()
         selectedHabit = habit
         timeRemaining = habit.currentTimerDuration
+        halfwaySignalTriggered = false
     }
 
     func startTimer() {
@@ -78,6 +82,7 @@ final class TimerViewModel {
         timer = nil
         isRunning = false
         isPaused = false
+        halfwaySignalTriggered = false
         endBackgroundTask()
         if let habit = selectedHabit {
             timeRemaining = habit.currentTimerDuration
@@ -100,6 +105,22 @@ final class TimerViewModel {
             return
         }
         timeRemaining -= 1
+
+        // Check for halfway point
+        checkHalfwaySignal()
+    }
+
+    private func checkHalfwaySignal() {
+        guard let habit = selectedHabit,
+              let settings = settings,
+              settings.halfwaySignalEnabled,
+              !halfwaySignalTriggered else { return }
+
+        let halfwayPoint = habit.currentTimerDuration / 2
+        if timeRemaining == halfwayPoint {
+            halfwaySignalTriggered = true
+            HapticsService.shared.trigger(for: settings.signal)
+        }
     }
 
     private func timerCompleted() {
