@@ -7,6 +7,7 @@ final class HapticsService {
     private let impactGenerator = UIImpactFeedbackGenerator(style: .heavy)
     private let notificationGenerator = UINotificationFeedbackGenerator()
     private var audioPlayer: AVAudioPlayer?
+    private var audioSessionReady = false
 
     private init() {
         impactGenerator.prepare()
@@ -39,40 +40,34 @@ final class HapticsService {
 
     func vibrate() {
         notificationGenerator.notificationOccurred(.success)
+        impactGenerator.impactOccurred(intensity: 1.0)
 
-        // Multiple vibrations for emphasis
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?.impactGenerator.impactOccurred()
+        // Extra pulses for stronger feedback
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.impactGenerator.impactOccurred(intensity: 0.9)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-            self?.impactGenerator.impactOccurred()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
+            self?.impactGenerator.impactOccurred(intensity: 0.9)
         }
     }
 
     private func halfwayHaptics() {
         notificationGenerator.notificationOccurred(.warning)
-        impactGenerator.impactOccurred()
+        impactGenerator.impactOccurred(intensity: 0.8)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-            self?.impactGenerator.impactOccurred()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?.impactGenerator.impactOccurred()
+            self?.impactGenerator.impactOccurred(intensity: 0.8)
         }
     }
 
     func playSound() {
-        // Use system sound
-        AudioServicesPlaySystemSound(1007) // Standard notification sound
-
-        // Alternative: Custom sound
-        // playCustomSound(named: "timer_complete")
+        playCustomSound(named: "ping_complete")
     }
 
     private func playHalfwaySound() {
-        AudioServicesPlaySystemSound(1005)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            AudioServicesPlaySystemSound(1005)
+        playCustomSound(named: "ping_half")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
+            self?.playCustomSound(named: "ping_half")
         }
     }
 
@@ -87,12 +82,30 @@ final class HapticsService {
     }
 
     private func playCustomSound(named name: String) {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else { return }
+        prepareAudioSession()
+        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else {
+            AudioServicesPlaySystemSound(1007)
+            return
+        }
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.prepareToPlay()
             audioPlayer?.play()
         } catch {
+            AudioServicesPlaySystemSound(1007)
             print("Could not play sound: \(error)")
+        }
+    }
+
+    private func prepareAudioSession() {
+        guard !audioSessionReady else { return }
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try session.setActive(true)
+            audioSessionReady = true
+        } catch {
+            print("Audio session setup failed: \(error)")
         }
     }
 }
