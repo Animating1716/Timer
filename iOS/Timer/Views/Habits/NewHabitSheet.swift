@@ -14,6 +14,11 @@ struct NewHabitSheet: View {
     @State private var hasTimer = false
     @State private var timerIncrement = 10
     @State private var initialTimerMinutes = 3
+    @State private var stretchEnabled = false
+    @State private var stretchDuration = 30
+    @State private var stretchIncrement = 5
+    @State private var stretchProgressive = false
+    @State private var stretchExerciseCount = 1
 
     var body: some View {
         NavigationStack {
@@ -89,6 +94,28 @@ struct NewHabitSheet: View {
                         Text("Nach jeder Session erhöht sich die Timer-Dauer um \(timerIncrement) Sekunden")
                     }
                 }
+
+                Section {
+                    Toggle("Dehnungsübungen vorschlagen", isOn: $stretchEnabled)
+
+                    if stretchEnabled {
+                        Stepper("Dauer: \(stretchDuration)s", value: $stretchDuration, in: 10...600, step: 5)
+
+                        Toggle("Zeit erhöhen", isOn: $stretchProgressive)
+
+                        if stretchProgressive {
+                            Stepper("Inkrement: \(stretchIncrement)s", value: $stretchIncrement, in: 1...60)
+                        }
+
+                        Stepper("Übungen pro Session: \(stretchExerciseCount)", value: $stretchExerciseCount, in: 1...6)
+                    }
+                } header: {
+                    Text("Dehnungsübungen")
+                } footer: {
+                    if stretchEnabled {
+                        Text(stretchProgressive ? "Nach jeder Übung erhöht sich die Dauer um \(stretchIncrement) Sekunden" : "Timer bleibt konstant.")
+                    }
+                }
             }
             .navigationTitle("Neuer Habit")
             .navigationBarTitleDisplayMode(.inline)
@@ -118,6 +145,11 @@ struct NewHabitSheet: View {
             hasTimer: hasTimer,
             timerIncrement: timerIncrement,
             currentTimerDuration: initialTimerMinutes * 60,
+            stretchEnabled: stretchEnabled,
+            stretchDuration: stretchDuration,
+            stretchIncrement: stretchIncrement,
+            stretchProgressive: stretchProgressive,
+            stretchExerciseCount: stretchExerciseCount,
             sortOrder: habits.count
         )
 
@@ -212,6 +244,34 @@ struct EditHabitSheet: View {
                     }
                 } header: {
                     Text("Timer")
+                }
+
+                Section {
+                    Toggle(
+                        "Dehnungsübungen vorschlagen",
+                        isOn: Binding(
+                            get: { habit.stretchEnabled },
+                            set: { habit.stretchEnabled = $0 }
+                        )
+                    )
+
+                    if habit.stretchEnabled {
+                        Stepper("Dauer: \(habit.stretchDuration)s", value: $habit.stretchDuration, in: 10...600, step: 5)
+
+                        Toggle("Zeit erhöhen", isOn: $habit.stretchProgressive)
+
+                        if habit.stretchProgressive {
+                            Stepper("Inkrement: \(habit.stretchIncrement)s", value: $habit.stretchIncrement, in: 1...60)
+                        }
+
+                        Stepper("Übungen pro Session: \(habit.stretchExerciseCount)", value: $habit.stretchExerciseCount, in: 1...6)
+                    }
+                } header: {
+                    Text("Dehnungsübungen")
+                } footer: {
+                    if habit.stretchEnabled {
+                        Text(habit.stretchProgressive ? "Nach jeder Übung erhöht sich die Dauer um \(habit.stretchIncrement) Sekunden" : "Timer bleibt konstant.")
+                    }
                 }
 
                 Section {

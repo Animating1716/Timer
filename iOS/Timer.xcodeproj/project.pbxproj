@@ -24,6 +24,8 @@
 		B1000015 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000015 /* CloudKitService.swift */; };
 		B1000016 /* HapticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000016 /* HapticsService.swift */; };
 		B1000017 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000017 /* SyncService.swift */; };
+		B1000018 /* StretchExercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000018 /* StretchExercise.swift */; };
+		B1000019 /* StretchSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000019 /* StretchSessionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,8 @@
 		B2000015 /* CloudKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitService.swift; sourceTree = "<group>"; };
 		B2000016 /* HapticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsService.swift; sourceTree = "<group>"; };
 		B2000017 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
+		B2000018 /* StretchExercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchExercise.swift; sourceTree = "<group>"; };
+		B2000019 /* StretchSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchSessionView.swift; sourceTree = "<group>"; };
 		B3000001 /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -95,6 +99,7 @@
 				B2000003 /* Habit.swift */,
 				B2000004 /* HabitLog.swift */,
 				B2000005 /* AppSettings.swift */,
+				B2000018 /* StretchExercise.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,6 +149,7 @@
 				B2000009 /* HabitsView.swift */,
 				B2000010 /* HabitRowView.swift */,
 				B2000011 /* NewHabitSheet.swift */,
+				B2000019 /* StretchSessionView.swift */,
 			);
 			path = Habits;
 			sourceTree = "<group>";
@@ -230,12 +236,14 @@
 				B1000003 /* Habit.swift in Sources */,
 				B1000004 /* HabitLog.swift in Sources */,
 				B1000005 /* AppSettings.swift in Sources */,
+				B1000018 /* StretchExercise.swift in Sources */,
 				B1000006 /* MainTabView.swift in Sources */,
 				B1000007 /* TimerView.swift in Sources */,
 				B1000008 /* TimerRingView.swift in Sources */,
 				B1000009 /* HabitsView.swift in Sources */,
 				B1000010 /* HabitRowView.swift in Sources */,
 				B1000011 /* NewHabitSheet.swift in Sources */,
+				B1000019 /* StretchSessionView.swift in Sources */,
 				B1000012 /* TimerSettingsSheet.swift in Sources */,
 				B1000013 /* TimerViewModel.swift in Sources */,
 				B1000014 /* HabitsViewModel.swift in Sources */,

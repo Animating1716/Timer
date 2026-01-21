@@ -13,6 +13,12 @@ final class Habit {
     var timerIncrement: Int = 10
     var currentTimerDuration: Int = 180
     var linkedToExercise: Bool = false
+    var stretchDuration: Int = 30
+    var stretchIncrement: Int = 5
+    var stretchProgressive: Bool = false
+    var stretchExerciseCount: Int = 1
+    var stretchPreferenceJSON: String = "{}"
+    var lastStretchIndex: Int = -1
     var sortOrder: Int = 0
     var createdAt: Date = Date()
 
@@ -24,6 +30,11 @@ final class Habit {
         hasTimer: Bool = false,
         timerIncrement: Int = 10,
         currentTimerDuration: Int = 180,
+        stretchEnabled: Bool = false,
+        stretchDuration: Int = 30,
+        stretchIncrement: Int = 5,
+        stretchProgressive: Bool = false,
+        stretchExerciseCount: Int = 1,
         sortOrder: Int = 0
     ) {
         self.id = UUID()
@@ -34,13 +45,39 @@ final class Habit {
         self.hasTimer = hasTimer
         self.timerIncrement = timerIncrement
         self.currentTimerDuration = currentTimerDuration
-        self.linkedToExercise = false
+        self.linkedToExercise = stretchEnabled
+        self.stretchDuration = stretchDuration
+        self.stretchIncrement = stretchIncrement
+        self.stretchProgressive = stretchProgressive
+        self.stretchExerciseCount = stretchExerciseCount
+        self.stretchPreferenceJSON = "{}"
+        self.lastStretchIndex = -1
         self.sortOrder = sortOrder
         self.createdAt = Date()
     }
 
     var color: Color {
         Color(hex: colorHex) ?? .red
+    }
+
+    var stretchEnabled: Bool {
+        get { linkedToExercise }
+        set { linkedToExercise = newValue }
+    }
+
+    var stretchPreferences: [String: Int] {
+        get {
+            guard let data = stretchPreferenceJSON.data(using: .utf8) else { return [:] }
+            let decoded = (try? JSONSerialization.jsonObject(with: data)) as? [String: Int]
+            return decoded ?? [:]
+        }
+        set {
+            guard let data = try? JSONSerialization.data(withJSONObject: newValue) else {
+                stretchPreferenceJSON = "{}"
+                return
+            }
+            stretchPreferenceJSON = String(data: data, encoding: .utf8) ?? "{}"
+        }
     }
 }
 
@@ -86,10 +123,10 @@ extension Habit {
         "cup.and.saucer.fill",
         "figure.run",
         "figure.mind.and.body",
+        "figure.cooldown",
         "brain.head.profile",
         "book.fill",
         "drop.fill",
-        "pill.fill",
         "bed.double.fill",
         "sunrise.fill",
         "moon.fill",

@@ -13,6 +13,7 @@ struct HabitsView: View {
     @State private var showSettings = false
     @State private var habitToEdit: Habit?
     @State private var showTimer = false
+    @State private var stretchSession: StretchSession?
 
     var body: some View {
         ZStack {
@@ -30,17 +31,21 @@ struct HabitsView: View {
                 ScrollView {
                     LazyVStack(spacing: 12) {
                         ForEach(habitsVM.filteredHabits(habits, logs: logs)) { habit in
+                            let isCompleted = habitsVM.isCompleted(habit: habit, on: habitsVM.selectedDate, logs: logs)
                             HabitRowView(
                                 habit: habit,
                                 progress: habitsVM.getProgress(for: habit, on: habitsVM.selectedDate, logs: logs),
                                 count: habitsVM.getLog(for: habit, on: habitsVM.selectedDate, logs: logs)?.count ?? 0,
-                                isCompleted: habitsVM.isCompleted(habit: habit, on: habitsVM.selectedDate, logs: logs),
+                                isCompleted: isCompleted,
                                 onTap: {
                                     handleHabitTap(habit)
                                 },
                                 onTimerTap: habit.hasTimer ? {
                                     timerVM.selectHabit(habit)
                                     showTimer = true
+                                } : nil,
+                                onStretchTap: habit.stretchEnabled && !isCompleted ? {
+                                    startStretch(for: habit)
                                 } : nil
                             )
                             .onTapGesture {
@@ -80,6 +85,9 @@ struct HabitsView: View {
         }
         .sheet(isPresented: $showSettings) {
             HabitSettingsSheet()
+        }
+        .sheet(item: $stretchSession) { session in
+            StretchSessionView(session: session, habitsVM: habitsVM)
         }
         .fullScreenCover(isPresented: $showTimer) {
             TimerView(timerVM: timerVM, habitsVM: habitsVM)
@@ -218,6 +226,24 @@ struct HabitsView: View {
             habitsVM.toggleHabit(habit, on: habitsVM.selectedDate, logs: logs, modelContext: modelContext)
         }
     }
+
+    private func startStretch(for habit: Habit) {
+        let count = max(1, habit.stretchExerciseCount)
+        let exercises = StretchCatalog.pickExercises(
+            count: count,
+            preferences: habit.stretchPreferences
+        )
+        habit.lastStretchIndex = exercises.isEmpty ? habit.lastStretchIndex : StretchCatalog.exercises.firstIndex(where: { $0.id == exercises.last?.id }) ?? habit.lastStretchIndex
+        try? modelContext.save()
+
+        let duration = max(5, habit.stretchDuration)
+        stretchSession = StretchSession(
+            habit: habit,
+            exercises: exercises,
+            date: habitsVM.selectedDate,
+            duration: duration
+        )
+    }
 }
 
 extension Notification.Name {
@@ -227,4 +253,12 @@ extension Notification.Name {
 #Preview {
     HabitsView(habitsVM: HabitsViewModel(), timerVM: TimerViewModel())
         .modelContainer(for: [Habit.self, HabitLog.self, AppSettings.self])
+}
+
+struct StretchSession: Identifiable {
+    let id = UUID()
+    let habit: Habit
+    let exercises: [StretchExercise]
+    let date: Date
+    let duration: Int
 }

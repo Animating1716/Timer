@@ -7,6 +7,7 @@ struct HabitRowView: View {
     let isCompleted: Bool
     let onTap: () -> Void
     let onTimerTap: (() -> Void)?
+    let onStretchTap: (() -> Void)?
 
     private var backgroundColor: Color {
         habit.color.opacity(0.3)
@@ -77,6 +78,22 @@ struct HabitRowView: View {
                             }
                         }
 
+                        if let stretchAction = onStretchTap {
+                            Button {
+                                stretchAction()
+                            } label: {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.black.opacity(0.3))
+                                        .frame(width: 36, height: 36)
+
+                                    Image(systemName: "timer")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
+
                         // Complete/Add button
                         Button {
                             HapticsService.shared.lightTap()
@@ -113,7 +130,8 @@ struct HabitRowView: View {
             count: 1,
             isCompleted: false,
             onTap: {},
-            onTimerTap: nil
+            onTimerTap: nil,
+            onStretchTap: nil
         )
 
         HabitRowView(
@@ -125,7 +143,8 @@ struct HabitRowView: View {
             count: 1,
             isCompleted: true,
             onTap: {},
-            onTimerTap: {}
+            onTimerTap: {},
+            onStretchTap: nil
         )
 
         HabitRowView(
@@ -137,7 +156,8 @@ struct HabitRowView: View {
             count: 0,
             isCompleted: false,
             onTap: {},
-            onTimerTap: nil
+            onTimerTap: nil,
+            onStretchTap: {}
         )
     }
     .padding()
