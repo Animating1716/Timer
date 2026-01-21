@@ -109,18 +109,12 @@ struct StretchSessionView: View {
 
                 VStack(spacing: 16) {
                     ZStack {
-                        if let imageName = currentExercise.imageName {
-                            Image(imageName)
-                                .resizable()
-                                .renderingMode(.original)
-                                .colorInvert()
-                                .scaledToFit()
-                                .frame(width: 200, height: 200)
-                        } else {
-                            Image(systemName: currentExercise.symbolName)
-                                .font(.system(size: 80))
-                                .foregroundColor(.white)
-                        }
+                        StretchExerciseIcon(
+                            exercise: currentExercise,
+                            size: 200,
+                            symbolSize: 80,
+                            tint: .white
+                        )
 
                         Circle()
                             .stroke(Color.white.opacity(0.18), lineWidth: 2)
@@ -248,6 +242,28 @@ struct StretchSessionView: View {
     }
 }
 
+private struct StretchExerciseIcon: View {
+    let exercise: StretchExercise
+    let size: CGFloat
+    let symbolSize: CGFloat
+    let tint: Color
+
+    var body: some View {
+        if let imageName = exercise.imageName {
+            Image(imageName)
+                .resizable()
+                .renderingMode(.original)
+                .colorInvert()
+                .scaledToFit()
+                .frame(width: size, height: size)
+        } else {
+            Image(systemName: exercise.symbolName)
+                .font(.system(size: symbolSize))
+                .foregroundColor(tint)
+        }
+    }
+}
+
 private struct StretchProgressBar: View {
     let progress: Double
     let color: Color
@@ -292,18 +308,12 @@ private struct StretchFeedbackView: View {
                                     .fill(Color.black.opacity(0.05))
                                     .frame(width: 36, height: 36)
 
-                                if let imageName = exercise.imageName {
-                                    Image(imageName)
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .colorInvert()
-                                        .scaledToFit()
-                                        .frame(width: 24, height: 24)
-                                } else {
-                                    Image(systemName: exercise.symbolName)
-                                        .font(.system(size: 18))
-                                        .foregroundColor(.primary)
-                                }
+                                StretchExerciseIcon(
+                                    exercise: exercise,
+                                    size: 24,
+                                    symbolSize: 18,
+                                    tint: .primary
+                                )
                             }
 
                             Text(exercise.name)
