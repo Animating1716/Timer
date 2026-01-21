@@ -48,95 +48,25 @@ struct StretchSessionView: View {
         return String(format: "%d:%02d", minutes, seconds)
     }
 
+    private var statusText: String {
+        if isCompleted {
+            return "Fertig!"
+        }
+        return progress >= 0.5 ? "Halbzeit erreicht" : "Läuft ..."
+    }
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                HStack {
-                    Button {
-                        stopTimer()
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.title2)
-                            .foregroundColor(.gray)
-                    }
+                headerView
 
-                    Spacer()
-
-                    HStack(spacing: 8) {
-                        Image(systemName: session.habit.icon)
-                            .foregroundColor(session.habit.color)
-                        Text(session.habit.name)
-                            .foregroundColor(.white)
-                    }
-
-                    Spacer()
-
-                    Color.clear
-                        .frame(width: 28, height: 28)
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
-
-                VStack(spacing: 12) {
-                    Text(timeString)
-                        .font(.system(size: 48, weight: .light, design: .rounded))
-                        .foregroundColor(.white)
-                        .monospacedDigit()
-                        .padding(.top, 16)
-
-                    StretchProgressBar(
-                        progress: progress,
-                        color: progress >= 0.5 ? .green : session.habit.color
-                    )
-                    .frame(height: 8)
-                    .padding(.horizontal, 32)
-
-                    if !isCompleted {
-                        Text(progress >= 0.5 ? "Halbzeit erreicht" : "Läuft ...")
-                            .font(.subheadline)
-                            .foregroundColor(progress >= 0.5 ? .green : .gray)
-                    } else {
-                        Text("Fertig!")
-                            .font(.headline)
-                            .foregroundColor(.green)
-                    }
-                }
+                timerStatusView
 
                 Spacer()
 
-                VStack(spacing: 16) {
-                    ZStack {
-                        StretchExerciseIcon(
-                            exercise: currentExercise,
-                            size: 200,
-                            symbolSize: 80,
-                            tint: .white
-                        )
-
-                        Circle()
-                            .stroke(Color.white.opacity(0.18), lineWidth: 2)
-                            .frame(width: 260, height: 260)
-                    }
-
-                    Text(currentExercise.name)
-                        .font(.title2)
-                        .foregroundColor(.white)
-
-                    Text(currentExercise.description)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-
-                    if session.exercises.count > 1 {
-                        Text("Übung \(currentIndex + 1) von \(session.exercises.count)")
-                            .font(.caption)
-                            .foregroundColor(.gray.opacity(0.8))
-                    }
-                }
+                exerciseView
 
                 Spacer()
 
@@ -174,6 +104,89 @@ struct StretchSessionView: View {
                 exercises: session.exercises
             ) {
                 dismiss()
+            }
+        }
+    }
+
+    private var headerView: some View {
+        HStack {
+            Button {
+                stopTimer()
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+            }
+
+            Spacer()
+
+            HStack(spacing: 8) {
+                Image(systemName: session.habit.icon)
+                    .foregroundColor(session.habit.color)
+                Text(session.habit.name)
+                    .foregroundColor(.white)
+            }
+
+            Spacer()
+
+            Color.clear
+                .frame(width: 28, height: 28)
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
+    }
+
+    private var timerStatusView: some View {
+        VStack(spacing: 12) {
+            Text(timeString)
+                .font(.system(size: 48, weight: .light, design: .rounded))
+                .foregroundColor(.white)
+                .monospacedDigit()
+                .padding(.top, 16)
+
+            StretchProgressBar(
+                progress: progress,
+                color: progress >= 0.5 ? .green : session.habit.color
+            )
+            .frame(height: 8)
+            .padding(.horizontal, 32)
+
+            Text(statusText)
+                .font(isCompleted ? .headline : .subheadline)
+                .foregroundColor(isCompleted ? .green : (progress >= 0.5 ? .green : .gray))
+        }
+    }
+
+    private var exerciseView: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                StretchExerciseIcon(
+                    exercise: currentExercise,
+                    size: 200,
+                    symbolSize: 80,
+                    tint: .white
+                )
+
+                Circle()
+                    .stroke(Color.white.opacity(0.18), lineWidth: 2)
+                    .frame(width: 260, height: 260)
+            }
+
+            Text(currentExercise.name)
+                .font(.title2)
+                .foregroundColor(.white)
+
+            Text(currentExercise.description)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+
+            if session.exercises.count > 1 {
+                Text("Übung \(currentIndex + 1) von \(session.exercises.count)")
+                    .font(.caption)
+                    .foregroundColor(.gray.opacity(0.8))
             }
         }
     }
