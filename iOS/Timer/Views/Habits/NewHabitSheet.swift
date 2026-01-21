@@ -95,27 +95,13 @@ struct NewHabitSheet: View {
                     }
                 }
 
-                Section {
-                    Toggle("Dehnungsübungen vorschlagen", isOn: $stretchEnabled)
-
-                    if stretchEnabled {
-                        Stepper("Dauer: \(stretchDuration)s", value: $stretchDuration, in: 10...600, step: 5)
-
-                        Toggle("Zeit erhöhen", isOn: $stretchProgressive)
-
-                        if stretchProgressive {
-                            Stepper("Inkrement: \(stretchIncrement)s", value: $stretchIncrement, in: 1...60)
-                        }
-
-                        Stepper("Übungen pro Session: \(stretchExerciseCount)", value: $stretchExerciseCount, in: 1...6)
-                    }
-                } header: {
-                    Text("Dehnungsübungen")
-                } footer: {
-                    if stretchEnabled {
-                        Text(stretchProgressive ? "Nach jeder Übung erhöht sich die Dauer um \(stretchIncrement) Sekunden" : "Timer bleibt konstant.")
-                    }
-                }
+                StretchSettingsSection(
+                    enabled: $stretchEnabled,
+                    duration: $stretchDuration,
+                    progressive: $stretchProgressive,
+                    increment: $stretchIncrement,
+                    exerciseCount: $stretchExerciseCount
+                )
             }
             .navigationTitle("Neuer Habit")
             .navigationBarTitleDisplayMode(.inline)
@@ -246,33 +232,16 @@ struct EditHabitSheet: View {
                     Text("Timer")
                 }
 
-                Section {
-                    Toggle(
-                        "Dehnungsübungen vorschlagen",
-                        isOn: Binding(
-                            get: { habit.stretchEnabled },
-                            set: { habit.stretchEnabled = $0 }
-                        )
-                    )
-
-                    if habit.stretchEnabled {
-                        Stepper("Dauer: \(habit.stretchDuration)s", value: $habit.stretchDuration, in: 10...600, step: 5)
-
-                        Toggle("Zeit erhöhen", isOn: $habit.stretchProgressive)
-
-                        if habit.stretchProgressive {
-                            Stepper("Inkrement: \(habit.stretchIncrement)s", value: $habit.stretchIncrement, in: 1...60)
-                        }
-
-                        Stepper("Übungen pro Session: \(habit.stretchExerciseCount)", value: $habit.stretchExerciseCount, in: 1...6)
-                    }
-                } header: {
-                    Text("Dehnungsübungen")
-                } footer: {
-                    if habit.stretchEnabled {
-                        Text(habit.stretchProgressive ? "Nach jeder Übung erhöht sich die Dauer um \(habit.stretchIncrement) Sekunden" : "Timer bleibt konstant.")
-                    }
-                }
+                StretchSettingsSection(
+                    enabled: Binding(
+                        get: { habit.stretchEnabled },
+                        set: { habit.stretchEnabled = $0 }
+                    ),
+                    duration: $habit.stretchDuration,
+                    progressive: $habit.stretchProgressive,
+                    increment: $habit.stretchIncrement,
+                    exerciseCount: $habit.stretchExerciseCount
+                )
 
                 Section {
                     Button(role: .destructive) {
@@ -354,4 +323,36 @@ struct HabitSettingsSheet: View {
 
 #Preview {
     NewHabitSheet(habits: [])
+}
+
+private struct StretchSettingsSection: View {
+    @Binding var enabled: Bool
+    @Binding var duration: Int
+    @Binding var progressive: Bool
+    @Binding var increment: Int
+    @Binding var exerciseCount: Int
+
+    var body: some View {
+        Section {
+            Toggle("Dehnungsübungen vorschlagen", isOn: $enabled)
+
+            if enabled {
+                Stepper("Dauer: \(duration)s", value: $duration, in: 10...600, step: 5)
+
+                Toggle("Zeit erhöhen", isOn: $progressive)
+
+                if progressive {
+                    Stepper("Inkrement: \(increment)s", value: $increment, in: 1...60)
+                }
+
+                Stepper("Übungen pro Session: \(exerciseCount)", value: $exerciseCount, in: 1...6)
+            }
+        } header: {
+            Text("Dehnungsübungen")
+        } footer: {
+            if enabled {
+                Text(progressive ? "Nach jeder Übung erhöht sich die Dauer um \(increment) Sekunden" : "Timer bleibt konstant.")
+            }
+        }
+    }
 }
