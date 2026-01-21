@@ -216,7 +216,7 @@ struct StretchSessionView: View {
 
         if !halfwayTriggered && timeRemaining == currentDuration / 2 {
             halfwayTriggered = true
-            HapticsService.shared.trigger(for: settings.signal)
+            HapticsService.shared.triggerHalfway(for: settings.signal)
         }
     }
 

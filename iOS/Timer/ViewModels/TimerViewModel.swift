@@ -119,7 +119,7 @@ final class TimerViewModel {
         let halfwayPoint = habit.currentTimerDuration / 2
         if timeRemaining == halfwayPoint {
             halfwaySignalTriggered = true
-            HapticsService.shared.trigger(for: settings.signal)
+            HapticsService.shared.triggerHalfway(for: settings.signal)
         }
     }
 

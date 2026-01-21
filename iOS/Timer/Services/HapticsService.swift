@@ -25,6 +25,18 @@ final class HapticsService {
         }
     }
 
+    func triggerHalfway(for type: SignalType) {
+        switch type {
+        case .vibrationOnly:
+            halfwayHaptics()
+        case .soundAndVibration:
+            halfwayHaptics()
+            playHalfwaySound()
+        case .soundOnly:
+            playHalfwaySound()
+        }
+    }
+
     func vibrate() {
         notificationGenerator.notificationOccurred(.success)
 
@@ -37,12 +49,31 @@ final class HapticsService {
         }
     }
 
+    private func halfwayHaptics() {
+        notificationGenerator.notificationOccurred(.warning)
+        impactGenerator.impactOccurred()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+            self?.impactGenerator.impactOccurred()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.impactGenerator.impactOccurred()
+        }
+    }
+
     func playSound() {
         // Use system sound
         AudioServicesPlaySystemSound(1007) // Standard notification sound
 
         // Alternative: Custom sound
         // playCustomSound(named: "timer_complete")
+    }
+
+    private func playHalfwaySound() {
+        AudioServicesPlaySystemSound(1005)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            AudioServicesPlaySystemSound(1005)
+        }
     }
 
     func lightTap() {
