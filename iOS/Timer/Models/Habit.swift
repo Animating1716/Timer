@@ -65,6 +65,9 @@ final class Habit {
         set { linkedToExercise = newValue }
     }
 
+    static let stretchPreferenceMin = -4
+    static let stretchPreferenceMax = 4
+
     var stretchPreferences: [String: Int] {
         get {
             guard let data = stretchPreferenceJSON.data(using: .utf8) else { return [:] }
@@ -78,6 +81,18 @@ final class Habit {
             }
             stretchPreferenceJSON = String(data: data, encoding: .utf8) ?? "{}"
         }
+    }
+
+    func stretchPreference(for exerciseId: String) -> Int {
+        stretchPreferences[exerciseId] ?? 0
+    }
+
+    func updateStretchPreference(for exerciseId: String, delta: Int) {
+        var prefs = stretchPreferences
+        let current = prefs[exerciseId] ?? 0
+        let updated = max(Habit.stretchPreferenceMin, min(Habit.stretchPreferenceMax, current + delta))
+        prefs[exerciseId] = updated
+        stretchPreferences = prefs
     }
 }
 

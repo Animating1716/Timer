@@ -312,7 +312,7 @@ private struct StretchFeedbackView: View {
                             Spacer()
 
                             HStack(spacing: 12) {
-                                let weight = preference(for: exercise)
+                                let weight = habit.stretchPreference(for: exercise.id)
 
                                 Button {
                                     updatePreference(for: exercise, delta: -1)
@@ -320,8 +320,8 @@ private struct StretchFeedbackView: View {
                                     Image(systemName: "minus.circle")
                                         .font(.system(size: 18))
                                 }
-                                .disabled(weight <= -4)
-                                .opacity(weight <= -4 ? 0.3 : 1)
+                                .disabled(weight <= Habit.stretchPreferenceMin)
+                                .opacity(weight <= Habit.stretchPreferenceMin ? 0.3 : 1)
 
                                 Button {
                                     updatePreference(for: exercise, delta: 1)
@@ -329,8 +329,8 @@ private struct StretchFeedbackView: View {
                                     Image(systemName: "plus.circle")
                                         .font(.system(size: 18))
                                 }
-                                .disabled(weight >= 4)
-                                .opacity(weight >= 4 ? 0.3 : 1)
+                                .disabled(weight >= Habit.stretchPreferenceMax)
+                                .opacity(weight >= Habit.stretchPreferenceMax ? 0.3 : 1)
                             }
                             .buttonStyle(.plain)
                         }
@@ -353,16 +353,8 @@ private struct StretchFeedbackView: View {
         }
     }
 
-    private func preference(for exercise: StretchExercise) -> Int {
-        habit.stretchPreferences[exercise.id] ?? 0
-    }
-
     private func updatePreference(for exercise: StretchExercise, delta: Int) {
-        var prefs = habit.stretchPreferences
-        let current = prefs[exercise.id] ?? 0
-        let updated = max(-4, min(4, current + delta))
-        prefs[exercise.id] = updated
-        habit.stretchPreferences = prefs
+        habit.updateStretchPreference(for: exercise.id, delta: delta)
         try? modelContext.save()
     }
 }
