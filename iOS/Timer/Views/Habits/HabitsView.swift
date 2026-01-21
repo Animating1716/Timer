@@ -49,7 +49,7 @@ struct HabitsView: View {
                                     timerVM.selectHabit(habit)
                                     showTimer = true
                                 } : nil,
-                                onStretchTap: habit.stretchEnabled && !isCompleted ? {
+                                onStretchTap: habit.stretchEnabled ? {
                                     startStretch(for: habit)
                                 } : nil
                             )

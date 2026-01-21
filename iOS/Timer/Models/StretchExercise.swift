@@ -142,242 +142,242 @@ enum StretchCatalog {
 
     static let lifehackExercises: [StretchExercise] = [
         StretchExercise(
-            id: "camel-pose",
+            id: "camel",
             name: "Kamel",
-            description: "Knie dich hin, Hände an die Fersen, Brust öffnen und Hüfte nach vorn schieben.",
+            description: "Knie dich hin, Hände an die Fersen, Brust öffnen, Hüfte nach vorn.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_camel_pose"
+            imageName: "lifehack_01_camel_pose"
         ),
         StretchExercise(
             id: "wide-forward-fold",
             name: "Breite Vorbeuge",
-            description: "Breit stehen, lang werden und mit geradem Rücken nach vorn beugen.",
+            description: "Breit stehen, Rücken lang, aus der Hüfte nach vorn beugen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_wide_forward_fold"
+            imageName: "lifehack_02_wide_forward_fold"
         ),
         StretchExercise(
-            id: "right-angle-pose",
-            name: "Rechter Winkel",
-            description: "In den Ausfallschritt, vorderes Knie 90°, Arme gestreckt über dem Kopf.",
+            id: "frog-pose",
+            name: "Frosch",
+            description: "Knie weit, Unterarme am Boden, Hüfte nach hinten sinken lassen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_right_angle"
+            imageName: "lifehack_03_frog_pose"
         ),
         StretchExercise(
-            id: "triangle-pose",
-            name: "Dreieck",
-            description: "Füße weit, vorderes Bein gestreckt, Oberkörper zur Seite neigen.",
+            id: "wide-side-lunge",
+            name: "Breite Seitbeuge",
+            description: "Breit stehen, in ein Bein sinken, anderes lang strecken.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_triangle"
+            imageName: "lifehack_04_wide_side_lunge"
         ),
         StretchExercise(
-            id: "downward-dog",
-            name: "Herabschauender Hund",
-            description: "Hände und Füße am Boden, Hüfte hoch, Fersen Richtung Boden drücken.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_downward_dog"
-        ),
-        StretchExercise(
-            id: "plow-pose",
-            name: "Pflug",
-            description: "Aus der Rückenlage Beine über den Kopf führen, Rücken lang lassen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_plow"
-        ),
-        StretchExercise(
-            id: "standing-forward-fold",
-            name: "Stehende Vorbeuge",
-            description: "Hüftbreit stehen und aus der Hüfte nach vorn beugen, Nacken locker.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_standing_forward_fold"
-        ),
-        StretchExercise(
-            id: "shoulder-opening",
-            name: "Schulteröffner",
-            description: "Knieend Hände hinter dem Rücken verschränken und Arme nach oben ziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_shoulder_opening"
-        ),
-        StretchExercise(
-            id: "crescent-lunge",
-            name: "Crescent Lunge",
-            description: "Tiefer Ausfallschritt, Becken nach vorn, Arme nach oben strecken.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_crescent_lunge"
-        ),
-        StretchExercise(
-            id: "pigeon-pose",
-            name: "Taube",
-            description: "Vorderes Bein angewinkelt ablegen, hinteres Bein lang, Oberkörper sinken lassen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_pigeon"
-        ),
-        StretchExercise(
-            id: "bridge-pose",
-            name: "Brücke",
-            description: "Rückenlage, Füße aufstellen, Becken anheben und Brust öffnen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_bridge"
-        ),
-        StretchExercise(
-            id: "side-lunge",
-            name: "Seitlicher Ausfallschritt",
-            description: "In die Seite sinken, ein Bein beugen, anderes strecken, Hüfte tief halten.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_side_lunge"
-        ),
-        StretchExercise(
-            id: "locust-pose",
-            name: "Heuschrecke",
-            description: "Bauchlage, Beine und Brust leicht anheben, Arme nach hinten strecken.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_locust"
-        ),
-        StretchExercise(
-            id: "supine-twist",
-            name: "Liegender Twist",
-            description: "Rückenlage, Knie zur Seite fallen lassen, Schultern am Boden halten.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_supine_twist"
-        ),
-        StretchExercise(
-            id: "seated-wide-angle",
-            name: "Sitzende Grätsche",
-            description: "Sitzend Beine weit, Rücken lang, nach vorn beugen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_seated_wide_angle"
-        ),
-        StretchExercise(
-            id: "happy-baby",
-            name: "Glückliches Baby",
-            description: "Rückenlage, Knie zur Brust, Fußsohlen greifen und sanft ziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_happy_baby"
-        ),
-        StretchExercise(
-            id: "half-split",
-            name: "Halber Spagat",
-            description: "Im Ausfallschritt vorderes Bein strecken, Hüfte zurückziehen, Oberkörper nach vorn.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_half_split"
-        ),
-        StretchExercise(
-            id: "big-toe-stretch",
-            name: "Großzehen-Stretch",
-            description: "Sitzend ein Bein strecken, Fuß greifen und Bein Richtung Gesicht ziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_big_toe"
-        ),
-        StretchExercise(
-            id: "head-to-knee",
-            name: "Kopf-zum-Knie",
-            description: "Sitzend ein Bein gestreckt, anderes angewinkelt, Oberkörper zum gestreckten Bein.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_head_to_knee"
-        ),
-        StretchExercise(
-            id: "cow-face",
-            name: "Kuhgesicht",
-            description: "Sitzend Beine übereinander, Fußsohlen neben dem Gesäß, Rücken aufrecht.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_cow_face"
-        ),
-        StretchExercise(
-            id: "cat-cow",
-            name: "Katze/Kuh",
-            description: "Im Vierfüßler abwechselnd Wirbelsäule runden und ins Hohlkreuz kommen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_cat_cow"
-        ),
-        StretchExercise(
-            id: "forearm-stretch",
-            name: "Unterarm-Stretch",
-            description: "Arm strecken, Handfläche nach oben, Finger sanft nach unten ziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_forearm"
-        ),
-        StretchExercise(
-            id: "neck-stretch",
-            name: "Nacken-Stretch",
-            description: "Aufrecht sitzen, Kopf zur Seite neigen, Hand sanft nachziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_neck"
-        ),
-        StretchExercise(
-            id: "spinal-twist",
-            name: "Wirbelsäulen-Drehung",
-            description: "Aufrecht sitzen, ein Bein überkreuzen, Oberkörper zur Seite drehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_spinal_twist"
-        ),
-        StretchExercise(
-            id: "cow-face-arms",
-            name: "Kuhgesicht Arme",
-            description: "Einen Arm über den Kopf beugen, anderen von unten fassen, Hände annähern.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_cow_face_arms"
-        ),
-        StretchExercise(
-            id: "straight-leg-forward-fold",
-            name: "Vorbeuge gestreckt",
-            description: "Sitzend Beine gestreckt, Rücken lang, nach vorn gleiten.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_straight_leg_forward_fold"
-        ),
-        StretchExercise(
-            id: "figure-four",
-            name: "Figure-4-Stretch",
-            description: "Rückenlage, Fuß auf anderes Knie legen, Oberschenkel heranziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_figure_four"
-        ),
-        StretchExercise(
-            id: "lying-quad",
-            name: "Liegender Quadrizeps",
-            description: "Seit-/Rückenlage, Ferse Richtung Gesäß ziehen, Knie zusammen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_lying_quad"
-        ),
-        StretchExercise(
-            id: "hip-flexor-lifehack",
-            name: "Hüftbeuger",
-            description: "Tiefer Ausfallschritt, Becken nach vorn schieben, Rücken aufrecht.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_hip_flexor"
-        ),
-        StretchExercise(
-            id: "butterfly",
+            id: "butterfly-stretch",
             name: "Schmetterling",
             description: "Sitzend Fußsohlen zusammen, Knie nach außen sinken lassen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_butterfly"
+            imageName: "lifehack_05_butterfly_stretch"
         ),
         StretchExercise(
-            id: "hip-stretch",
-            name: "Hüft-Stretch",
-            description: "Sitzend ein Bein vor dem Körper, anderes seitlich, Oberkörper nach vorn.",
+            id: "forearm-extensor-1",
+            name: "Unterarm-Extensor",
+            description: "Arm strecken, Handfläche nach unten, Finger sanft zu dir ziehen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_hip_stretch"
+            imageName: "lifehack_06_forearm_extensor"
         ),
         StretchExercise(
-            id: "star-pose",
-            name: "Stern",
-            description: "Breit stehen, Arme weit, Oberkörper seitlich neigen, Länge in der Flanke.",
+            id: "neck-side-flexion",
+            name: "Nacken-Seitneigung",
+            description: "Kopf zur Seite neigen, Schultern entspannt lassen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_star"
+            imageName: "lifehack_07_neck_side_flexion"
         ),
         StretchExercise(
-            id: "double-pigeon",
-            name: "Doppel-Taube",
-            description: "Sitzend beide Schienbeine übereinander, nach vorn beugen.",
+            id: "neck-rotation",
+            name: "Nacken-Rotation",
+            description: "Kopf langsam nach links und rechts drehen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_double_pigeon"
+            imageName: "lifehack_08_neck_rotation"
+        ),
+        StretchExercise(
+            id: "neck-extension",
+            name: "Nacken-Streckung",
+            description: "Kopf sanft nach hinten, Blick nach oben.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_09_neck_extension"
+        ),
+        StretchExercise(
+            id: "neck-side-flexion-assisted",
+            name: "Nacken-Seitneigung (mit Hand)",
+            description: "Kopf zur Seite neigen, Hand zieht leicht nach.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_10_neck_side_flexion_assisted"
+        ),
+        StretchExercise(
+            id: "half-kneeling-hip-flexor",
+            name: "Kniender Hüftbeuger",
+            description: "Halb kniend, Becken nach vorn, Gesäß anspannen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_11_half_kneeling_hip_flexor"
+        ),
+        StretchExercise(
+            id: "forearm-extensor-2",
+            name: "Unterarm-Extensor (Variante)",
+            description: "Arm strecken, Handfläche nach unten, Finger sanft zurückziehen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_12_forearm_extensor_repeat"
+        ),
+        StretchExercise(
+            id: "lateral-shoulder",
+            name: "Seitlicher Schulterstretch",
+            description: "Arm vor die Brust, mit der anderen Hand näher ziehen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_13_lateral_shoulder"
+        ),
+        StretchExercise(
+            id: "standing-neck-flexion",
+            name: "Nacken-Beuge im Stand",
+            description: "Kopf nach vorn, Hände sanft nach unten drücken.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_14_standing_neck_flexion"
+        ),
+        StretchExercise(
+            id: "lat-spinal-traction",
+            name: "Lat-Stretch mit Zug",
+            description: "Arme strecken, Rücken lang, Wirbelsäule sanft nach hinten ziehen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_15_lat_spinal_traction"
+        ),
+        StretchExercise(
+            id: "lat-wall",
+            name: "Lat-Stretch an der Wand",
+            description: "Hände an die Wand, Hüfte zurück, Brust Richtung Boden.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_16_lat_wall"
         ),
         StretchExercise(
             id: "childs-pose",
             name: "Kindhaltung",
-            description: "Aus dem Kniestand Gesäß auf die Fersen, Arme lang nach vorn.",
+            description: "Gesäß auf die Fersen, Arme lang nach vorn, entspannen.",
             symbolName: "figure.mind.and.body",
-            imageName: "lifehack_childs_pose"
+            imageName: "lifehack_17_childs_pose"
+        ),
+        StretchExercise(
+            id: "standing-calf",
+            name: "Wadenstretch im Stand",
+            description: "Ferse am Boden, Bein gestreckt, Gewicht nach vorn.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_18_standing_calf"
+        ),
+        StretchExercise(
+            id: "front-split",
+            name: "Frontspagat",
+            description: "Aus dem Ausfallschritt Beine strecken, Hüfte sinken lassen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_19_front_split"
+        ),
+        StretchExercise(
+            id: "seated-forward-fold",
+            name: "Sitzende Vorbeuge",
+            description: "Sitzend Beine lang, Rücken lang, nach vorn beugen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_20_seated_forward_fold"
+        ),
+        StretchExercise(
+            id: "single-leg-forward-bend",
+            name: "Einbeinige Vorbeuge",
+            description: "Ein Bein gestreckt, anderes angewinkelt, Oberkörper nach vorn.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_21_single_leg_forward_bend"
+        ),
+        StretchExercise(
+            id: "deep-squat",
+            name: "Tiefe Hocke",
+            description: "Füße schulterbreit, tief hocken, Brust aufrecht.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_22_deep_squat"
+        ),
+        StretchExercise(
+            id: "seated-half-king-pigeon",
+            name: "Sitzende Halbe Taube",
+            description: "Ein Bein vorne angewinkelt, anderes nach hinten, Oberkörper aufrecht.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_23_seated_half_king_pigeon"
+        ),
+        StretchExercise(
+            id: "standing-calf-wall",
+            name: "Wadenstretch an der Wand",
+            description: "Hände an die Wand, hinteres Bein gestreckt, Ferse tief.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_24_standing_calf_wall"
+        ),
+        StretchExercise(
+            id: "lateral-flexion-wall",
+            name: "Seitbeuge an der Wand",
+            description: "Seitlich zur Wand, Arm über den Kopf, Flanke öffnen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_25_lateral_flexion_wall"
+        ),
+        StretchExercise(
+            id: "supine-twist",
+            name: "Liegender Twist",
+            description: "Rückenlage, Knie zur Seite, Schultern am Boden.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_26_supine_twist"
+        ),
+        StretchExercise(
+            id: "lateral-flexion-dowel",
+            name: "Seitbeuge mit Stab",
+            description: "Stab über den Kopf, zur Seite neigen, Länge halten.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_27_lateral_flexion_dowel"
+        ),
+        StretchExercise(
+            id: "triangle-pose",
+            name: "Dreieck",
+            description: "Breit stehen, vorderes Bein gestreckt, Oberkörper seitlich.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_28_triangle_pose"
+        ),
+        StretchExercise(
+            id: "chest-wall",
+            name: "Bruststretch an der Wand",
+            description: "Unterarm an die Wand, Brust aufdrehen.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_29_chest_wall"
+        ),
+        StretchExercise(
+            id: "assisted-chest",
+            name: "Bruststretch assistiert",
+            description: "Hände hinter dem Rücken verschränken, Arme nach oben.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_30_assisted_chest"
+        ),
+        StretchExercise(
+            id: "seated-half-pigeon-variation",
+            name: "Sitzende Halbe Taube (Variante)",
+            description: "Beine verschränkt im Sitz, Rücken lang, leicht nach vorn.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_31_seated_half_pigeon_variation"
+        ),
+        StretchExercise(
+            id: "supine-shoulder-external-rotation",
+            name: "Schulter-Außenrotation",
+            description: "Rückenlage, Arm 90°, Handrücken zum Boden sinken.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_32_supine_shoulder_external_rotation"
+        ),
+        StretchExercise(
+            id: "down-dog-wall",
+            name: "Down-Dog an der Wand",
+            description: "Hände an die Wand, Hüfte nach hinten, Rücken lang.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_33_down_dog_wall"
+        ),
+        StretchExercise(
+            id: "assisted-chest-variation",
+            name: "Bruststretch Variation",
+            description: "Arme hinter dem Rücken hoch, Brust öffnen, Schultern tief.",
+            symbolName: "figure.mind.and.body",
+            imageName: "lifehack_34_assisted_chest_variation"
         )
     ]
 
