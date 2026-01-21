@@ -5,6 +5,7 @@ struct HabitsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Habit.sortOrder) private var habits: [Habit]
     @Query private var logs: [HabitLog]
+    @Query private var settingsArray: [AppSettings]
 
     @Bindable var habitsVM: HabitsViewModel
     @Bindable var timerVM: TimerViewModel
@@ -14,6 +15,10 @@ struct HabitsView: View {
     @State private var habitToEdit: Habit?
     @State private var showTimer = false
     @State private var stretchSession: StretchSession?
+
+    private var settings: AppSettings? {
+        settingsArray.first
+    }
 
     var body: some View {
         ZStack {
@@ -91,6 +96,9 @@ struct HabitsView: View {
         }
         .fullScreenCover(isPresented: $showTimer) {
             TimerView(timerVM: timerVM, habitsVM: habitsVM)
+        }
+        .onAppear {
+            ensureSettings()
         }
     }
 
@@ -229,11 +237,14 @@ struct HabitsView: View {
 
     private func startStretch(for habit: Habit) {
         let count = max(1, habit.stretchExerciseCount)
+        let catalog = settings?.stretchCatalog ?? .lifehack
         let exercises = StretchCatalog.pickExercises(
             count: count,
-            preferences: habit.stretchPreferences
+            preferences: habit.stretchPreferences,
+            catalog: catalog
         )
-        habit.lastStretchIndex = exercises.isEmpty ? habit.lastStretchIndex : StretchCatalog.exercises.firstIndex(where: { $0.id == exercises.last?.id }) ?? habit.lastStretchIndex
+        let catalogExercises = StretchCatalog.exercises(for: catalog)
+        habit.lastStretchIndex = exercises.isEmpty ? habit.lastStretchIndex : catalogExercises.firstIndex(where: { $0.id == exercises.last?.id }) ?? habit.lastStretchIndex
         try? modelContext.save()
 
         let duration = max(5, habit.stretchDuration)
@@ -243,6 +254,14 @@ struct HabitsView: View {
             date: habitsVM.selectedDate,
             duration: duration
         )
+    }
+
+    private func ensureSettings() {
+        if settingsArray.isEmpty {
+            let newSettings = AppSettings()
+            modelContext.insert(newSettings)
+            try? modelContext.save()
+        }
     }
 }
 

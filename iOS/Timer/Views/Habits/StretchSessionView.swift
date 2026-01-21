@@ -263,12 +263,20 @@ private struct StretchExerciseIcon: View {
 
     var body: some View {
         if let imageName = exercise.imageName {
-            Image(imageName)
-                .resizable()
-                .renderingMode(.original)
-                .colorInvert()
-                .scaledToFit()
-                .frame(width: size, height: size)
+            if exercise.invertImage {
+                Image(imageName)
+                    .resizable()
+                    .renderingMode(.original)
+                    .colorInvert()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+            } else {
+                Image(imageName)
+                    .resizable()
+                    .renderingMode(.original)
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+            }
         } else {
             Image(systemName: exercise.symbolName)
                 .font(.system(size: symbolSize))
@@ -386,7 +394,7 @@ private struct StretchFeedbackView: View {
     let habit = Habit(name: "Dehnen", icon: "figure.mind.and.body", colorHex: "#4A4A6A")
     let session = StretchSession(
         habit: habit,
-        exercises: [StretchCatalog.exercises[0]],
+        exercises: [StretchCatalog.exercises(for: .lifehack)[0]],
         date: Date(),
         duration: 30
     )

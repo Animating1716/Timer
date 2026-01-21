@@ -293,10 +293,20 @@ struct EditHabitSheet: View {
 
 struct HabitSettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @Query private var settingsArray: [AppSettings]
+
+    private var settings: AppSettings? {
+        settingsArray.first
+    }
 
     var body: some View {
         NavigationStack {
             List {
+                if let settings = settings {
+                    StretchCatalogSettingsSection(settings: settings)
+                }
+
                 Section {
                     NavigationLink("Daten exportieren") {
                         Text("Export coming soon...")
@@ -312,17 +322,50 @@ struct HabitSettingsSheet: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Fertig") {
+                        try? modelContext.save()
                         dismiss()
                     }
                 }
             }
         }
         .presentationDetents([.medium])
+        .onAppear {
+            ensureSettings()
+        }
+    }
+
+    private func ensureSettings() {
+        if settingsArray.isEmpty {
+            let newSettings = AppSettings()
+            modelContext.insert(newSettings)
+            try? modelContext.save()
+        }
     }
 }
 
 #Preview {
     NewHabitSheet(habits: [])
+}
+
+private struct StretchCatalogSettingsSection: View {
+    @Bindable var settings: AppSettings
+
+    var body: some View {
+        Section {
+            Picker("Dehnkatalog", selection: $settings.stretchCatalog) {
+                ForEach(StretchCatalogKind.allCases, id: \.self) { catalog in
+                    Text(catalog.displayName).tag(catalog)
+                }
+            }
+
+            Text(settings.stretchCatalog.detailText)
+                .font(.footnote)
+                .foregroundColor(.secondary)
+                .padding(.top, 4)
+        } header: {
+            Text("Dehnkatalog")
+        }
+    }
 }
 
 private struct StretchSettingsSection: View {

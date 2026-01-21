@@ -23,6 +23,7 @@ final class AppSettings {
     var selectedHabitIdForTimer: UUID?
     var totalTimerSeconds: Int = 0
     var lastSyncDate: Date?
+    var stretchCatalogId: String = StretchCatalogKind.lifehack.rawValue
 
     init() {
         self.id = UUID()
@@ -31,10 +32,16 @@ final class AppSettings {
         self.selectedHabitIdForTimer = nil
         self.totalTimerSeconds = 0
         self.lastSyncDate = nil
+        self.stretchCatalogId = StretchCatalogKind.lifehack.rawValue
     }
 
     var signal: SignalType {
         get { SignalType(rawValue: signalType) ?? .soundAndVibration }
         set { signalType = newValue.rawValue }
+    }
+
+    var stretchCatalog: StretchCatalogKind {
+        get { StretchCatalogKind(rawValue: stretchCatalogId) ?? .lifehack }
+        set { stretchCatalogId = newValue.rawValue }
     }
 }
