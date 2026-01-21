@@ -160,18 +160,12 @@ struct StretchSessionView: View {
 
     private var exerciseView: some View {
         VStack(spacing: 16) {
-            ZStack {
-                StretchExerciseIcon(
-                    exercise: currentExercise,
-                    size: 200,
-                    symbolSize: 80,
-                    tint: .white
-                )
-
-                Circle()
-                    .stroke(Color.white.opacity(0.18), lineWidth: 2)
-                    .frame(width: 260, height: 260)
-            }
+            StretchExerciseIcon(
+                exercise: currentExercise,
+                size: 260,
+                symbolSize: 80,
+                tint: .white
+            )
 
             Text(currentExercise.name)
                 .font(.title2)
