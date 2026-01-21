@@ -15,7 +15,6 @@ struct StretchSessionView: View {
     @State private var isCompleted = false
     @State private var halfwayTriggered = false
     @State private var currentIndex = 0
-    @State private var showFeedback = false
 
     init(session: StretchSession, habitsVM: HabitsViewModel) {
         self.session = session
@@ -68,7 +67,11 @@ struct StretchSessionView: View {
 
                 exerciseView
 
-                Spacer()
+                if isCompleted {
+                    feedbackList
+                } else {
+                    Spacer()
+                }
 
                 Button {
                     if isCompleted {
@@ -97,14 +100,6 @@ struct StretchSessionView: View {
         }
         .onDisappear {
             stopTimer()
-        }
-        .sheet(isPresented: $showFeedback) {
-            StretchFeedbackView(
-                habit: session.habit,
-                exercises: session.exercises
-            ) {
-                dismiss()
-            }
         }
     }
 
@@ -237,7 +232,6 @@ struct StretchSessionView: View {
         }
 
         try? modelContext.save()
-        showFeedback = true
     }
 
     private func ensureSettings() {
@@ -246,6 +240,77 @@ struct StretchSessionView: View {
             modelContext.insert(newSettings)
             try? modelContext.save()
         }
+    }
+
+    private var feedbackList: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Feedback")
+                .font(.headline)
+                .foregroundColor(.white)
+
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(session.exercises) { exercise in
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white.opacity(0.08))
+                                    .frame(width: 36, height: 36)
+
+                                StretchExerciseIcon(
+                                    exercise: exercise,
+                                    size: 24,
+                                    symbolSize: 18,
+                                    tint: .white
+                                )
+                            }
+
+                            Text(exercise.name)
+                                .foregroundColor(.white)
+
+                            Spacer()
+
+                            HStack(spacing: 12) {
+                                let weight = session.habit.stretchPreference(for: exercise.id)
+
+                                Button {
+                                    updatePreference(for: exercise, delta: -1)
+                                } label: {
+                                    Image(systemName: "minus.circle")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(.white)
+                                }
+                                .disabled(weight <= Habit.stretchPreferenceMin)
+                                .opacity(weight <= Habit.stretchPreferenceMin ? 0.3 : 1)
+
+                                Button {
+                                    updatePreference(for: exercise, delta: 1)
+                                } label: {
+                                    Image(systemName: "plus.circle")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(.white)
+                                }
+                                .disabled(weight >= Habit.stretchPreferenceMax)
+                                .opacity(weight >= Habit.stretchPreferenceMax ? 0.3 : 1)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(Color.white.opacity(0.06))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                }
+            }
+            .frame(maxHeight: 220)
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 12)
+    }
+
+    private func updatePreference(for exercise: StretchExercise, delta: Int) {
+        session.habit.updateStretchPreference(for: exercise.id, delta: delta)
+        try? modelContext.save()
     }
 }
 
@@ -301,86 +366,6 @@ private struct StretchProgressBar: View {
                     .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
             }
         }
-    }
-}
-
-private struct StretchFeedbackView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-
-    @Bindable var habit: Habit
-    let exercises: [StretchExercise]
-    let onDone: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                List {
-                    ForEach(exercises) { exercise in
-                        HStack(spacing: 12) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.black.opacity(0.05))
-                                    .frame(width: 36, height: 36)
-
-                                StretchExerciseIcon(
-                                    exercise: exercise,
-                                    size: 24,
-                                    symbolSize: 18,
-                                    tint: .primary
-                                )
-                            }
-
-                            Text(exercise.name)
-                                .foregroundColor(.primary)
-
-                            Spacer()
-
-                            HStack(spacing: 12) {
-                                let weight = habit.stretchPreference(for: exercise.id)
-
-                                Button {
-                                    updatePreference(for: exercise, delta: -1)
-                                } label: {
-                                    Image(systemName: "minus.circle")
-                                        .font(.system(size: 18))
-                                }
-                                .disabled(weight <= Habit.stretchPreferenceMin)
-                                .opacity(weight <= Habit.stretchPreferenceMin ? 0.3 : 1)
-
-                                Button {
-                                    updatePreference(for: exercise, delta: 1)
-                                } label: {
-                                    Image(systemName: "plus.circle")
-                                        .font(.system(size: 18))
-                                }
-                                .disabled(weight >= Habit.stretchPreferenceMax)
-                                .opacity(weight >= Habit.stretchPreferenceMax ? 0.3 : 1)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                .listStyle(.plain)
-            }
-            .navigationTitle("Feedback")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Fertig") {
-                        try? modelContext.save()
-                        dismiss()
-                        onDone()
-                    }
-                }
-            }
-        }
-    }
-
-    private func updatePreference(for exercise: StretchExercise, delta: Int) {
-        habit.updateStretchPreference(for: exercise.id, delta: delta)
-        try? modelContext.save()
     }
 }
 

@@ -219,13 +219,6 @@ enum StretchCatalog {
             imageName: "lifehack_11_half_kneeling_hip_flexor"
         ),
         StretchExercise(
-            id: "forearm-extensor-2",
-            name: "Unterarm-Extensor (Variante)",
-            description: "Arm strecken, Handfläche nach unten, Finger sanft zurückziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_12_forearm_extensor_repeat"
-        ),
-        StretchExercise(
             id: "lateral-shoulder",
             name: "Seitlicher Schulterstretch",
             description: "Arm vor die Brust, mit der anderen Hand näher ziehen.",
@@ -238,13 +231,6 @@ enum StretchCatalog {
             description: "Kopf nach vorn, Hände sanft nach unten drücken.",
             symbolName: "figure.mind.and.body",
             imageName: "lifehack_14_standing_neck_flexion"
-        ),
-        StretchExercise(
-            id: "lat-spinal-traction",
-            name: "Lat-Stretch mit Zug",
-            description: "Arme strecken, Rücken lang, Wirbelsäule sanft nach hinten ziehen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_15_lat_spinal_traction"
         ),
         StretchExercise(
             id: "lat-wall",
@@ -266,13 +252,6 @@ enum StretchCatalog {
             description: "Ferse am Boden, Bein gestreckt, Gewicht nach vorn.",
             symbolName: "figure.mind.and.body",
             imageName: "lifehack_18_standing_calf"
-        ),
-        StretchExercise(
-            id: "front-split",
-            name: "Frontspagat",
-            description: "Aus dem Ausfallschritt Beine strecken, Hüfte sinken lassen.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_19_front_split"
         ),
         StretchExercise(
             id: "seated-forward-fold",
@@ -324,13 +303,6 @@ enum StretchCatalog {
             imageName: "lifehack_26_supine_twist"
         ),
         StretchExercise(
-            id: "lateral-flexion-dowel",
-            name: "Seitbeuge mit Stab",
-            description: "Stab über den Kopf, zur Seite neigen, Länge halten.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_27_lateral_flexion_dowel"
-        ),
-        StretchExercise(
             id: "triangle-pose",
             name: "Dreieck",
             description: "Breit stehen, vorderes Bein gestreckt, Oberkörper seitlich.",
@@ -343,13 +315,6 @@ enum StretchCatalog {
             description: "Unterarm an die Wand, Brust aufdrehen.",
             symbolName: "figure.mind.and.body",
             imageName: "lifehack_29_chest_wall"
-        ),
-        StretchExercise(
-            id: "assisted-chest",
-            name: "Bruststretch assistiert",
-            description: "Hände hinter dem Rücken verschränken, Arme nach oben.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_30_assisted_chest"
         ),
         StretchExercise(
             id: "seated-half-pigeon-variation",
@@ -372,13 +337,6 @@ enum StretchCatalog {
             symbolName: "figure.mind.and.body",
             imageName: "lifehack_33_down_dog_wall"
         ),
-        StretchExercise(
-            id: "assisted-chest-variation",
-            name: "Bruststretch Variation",
-            description: "Arme hinter dem Rücken hoch, Brust öffnen, Schultern tief.",
-            symbolName: "figure.mind.and.body",
-            imageName: "lifehack_34_assisted_chest_variation"
-        )
     ]
 
     static func exercises(for catalog: StretchCatalogKind) -> [StretchExercise] {
