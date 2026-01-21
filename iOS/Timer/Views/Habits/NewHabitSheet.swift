@@ -305,6 +305,7 @@ struct HabitSettingsSheet: View {
             List {
                 if let settings = settings {
                     StretchCatalogSettingsSection(settings: settings)
+                    SignalSettingsSection(settings: settings)
                 }
 
                 Section {
@@ -364,6 +365,28 @@ private struct StretchCatalogSettingsSection: View {
                 .padding(.top, 4)
         } header: {
             Text("Dehnkatalog")
+        }
+    }
+}
+
+private struct SignalSettingsSection: View {
+    @Bindable var settings: AppSettings
+
+    var body: some View {
+        Section {
+            Picker("", selection: $settings.signal) {
+                ForEach(SignalType.allCases, id: \.self) { type in
+                    Text(type.displayName).tag(type)
+                }
+            }
+            .pickerStyle(.segmented)
+            .listRowBackground(Color.clear)
+
+            Toggle("Halbzeit-Signal", isOn: $settings.halfwaySignalEnabled)
+        } header: {
+            Text("Signalart")
+        } footer: {
+            Text("Bei aktiviertem Halbzeit-Signal ertönt zur Hälfte der Zeit ein Signal")
         }
     }
 }

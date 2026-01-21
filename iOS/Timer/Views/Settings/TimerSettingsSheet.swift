@@ -11,23 +11,6 @@ struct TimerSettingsSheet: View {
     var body: some View {
         NavigationStack {
             List {
-                // Signal Type
-                Section {
-                    Picker("", selection: $settings.signal) {
-                        ForEach(SignalType.allCases, id: \.self) { type in
-                            Text(type.displayName).tag(type)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .listRowBackground(Color.clear)
-
-                    Toggle("Halbzeit-Signal", isOn: $settings.halfwaySignalEnabled)
-                } header: {
-                    Text("Signalart")
-                } footer: {
-                    Text("Bei aktiviertem Halbzeit-Signal ertönt zur Hälfte der Zeit ein Signal")
-                }
-
                 // Statistics
                 Section {
                     HStack {

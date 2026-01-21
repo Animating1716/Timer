@@ -75,13 +75,13 @@ final class HapticsService {
     }
 
     func playSound() {
-        playCustomSound(named: "ping_complete")
+        playSystemPing(kind: .complete)
     }
 
     private func playHalfwaySound() {
-        playCustomSound(named: "ping_half")
+        playSystemPing(kind: .halfway)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
-            self?.playCustomSound(named: "ping_half")
+            self?.playSystemPing(kind: .halfway)
         }
     }
 
@@ -95,23 +95,22 @@ final class HapticsService {
         generator.impactOccurred()
     }
 
-    private func playCustomSound(named name: String) {
+    private func playSystemPing(kind: PingKind) {
         prepareAudioSession()
-        let player = (name == "ping_half") ? halfPlayer : completePlayer
+        let player = (kind == .halfway) ? halfPlayer : completePlayer
         if let player = player {
             player.currentTime = 0
             player.play()
             return
         }
 
-        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else {
-            AudioServicesPlaySystemSound(1007)
-            return
-        }
+        let url = (kind == .halfway)
+            ? URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tink.caf")
+            : URL(fileURLWithPath: "/System/Library/Audio/UISounds/Tock.caf")
         do {
             let fallback = try AVAudioPlayer(contentsOf: url)
             fallback.prepareToPlay()
-            fallback.volume = 1.0
+            fallback.volume = 0.9
             fallback.play()
         } catch {
             AudioServicesPlaySystemSound(1007)
@@ -133,19 +132,19 @@ final class HapticsService {
     }
 
     private func preloadSounds() {
-        halfPlayer = loadPlayer(named: "ping_half")
-        completePlayer = loadPlayer(named: "ping_complete")
+        halfPlayer = loadSystemPlayer(path: "/System/Library/Audio/UISounds/Tink.caf")
+        completePlayer = loadSystemPlayer(path: "/System/Library/Audio/UISounds/Tock.caf")
     }
 
-    private func loadPlayer(named name: String) -> AVAudioPlayer? {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "wav") else { return nil }
+    private func loadSystemPlayer(path: String) -> AVAudioPlayer? {
+        let url = URL(fileURLWithPath: path)
         do {
             let player = try AVAudioPlayer(contentsOf: url)
             player.prepareToPlay()
-            player.volume = 1.0
+            player.volume = 0.9
             return player
         } catch {
-            print("Could not load sound \(name): \(error)")
+            print("Could not load system sound: \(error)")
             return nil
         }
     }
@@ -161,6 +160,11 @@ final class HapticsService {
     }
 
     private enum HapticKind {
+        case halfway
+        case complete
+    }
+
+    private enum PingKind {
         case halfway
         case complete
     }

@@ -26,8 +26,6 @@
 		B1000017 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000017 /* SyncService.swift */; };
 		B1000018 /* StretchExercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000018 /* StretchExercise.swift */; };
 		B1000019 /* StretchSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000019 /* StretchSessionView.swift */; };
-		B1000020 /* ping_half.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2000020 /* ping_half.wav */; };
-		B1000021 /* ping_complete.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2000021 /* ping_complete.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,8 +49,6 @@
 		B2000017 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		B2000018 /* StretchExercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchExercise.swift; sourceTree = "<group>"; };
 		B2000019 /* StretchSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchSessionView.swift; sourceTree = "<group>"; };
-		B2000020 /* ping_half.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ping_half.wav; sourceTree = "<group>"; };
-		B2000021 /* ping_complete.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ping_complete.wav; sourceTree = "<group>"; };
 		B3000001 /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -84,7 +80,6 @@
 				B5000005 /* Views */,
 				B5000006 /* ViewModels */,
 				B5000007 /* Services */,
-				B5000011 /* Resources */,
 				B2000002 /* Assets.xcassets */,
 			);
 			path = Timer;
@@ -167,15 +162,6 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		B5000011 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B2000020 /* ping_half.wav */,
-				B2000021 /* ping_complete.wav */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -236,8 +222,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1000002 /* Assets.xcassets in Resources */,
-				B1000020 /* ping_half.wav in Resources */,
-				B1000021 /* ping_complete.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
