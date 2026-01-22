@@ -39,52 +39,33 @@ final class HabitsViewModel {
     }
 
     func incrementHabit(_ habit: Habit, on date: Date, logs: [HabitLog], modelContext: ModelContext) {
-        if let log = getLog(for: habit, on: date, logs: logs) {
-            log.count += 1
-            log.completedAt = Date()
-        } else {
-            let newLog = HabitLog(habitId: habit.id, date: date)
-            newLog.count = 1
-            newLog.completedAt = Date()
-            modelContext.insert(newLog)
-        }
-        try? modelContext.save()
+        let log = upsertLog(for: habit, on: date, logs: logs, modelContext: modelContext)
+        log.count += 1
+        log.completedAt = Date()
+        save(modelContext)
     }
 
     func toggleHabit(_ habit: Habit, on date: Date, logs: [HabitLog], modelContext: ModelContext) {
-        if let log = getLog(for: habit, on: date, logs: logs) {
-            if log.count >= habit.dailyGoal {
-                // Reset if already complete
-                log.count = 0
-                log.completedAt = nil
-            } else {
-                // Complete
-                log.count = habit.dailyGoal
-                log.completedAt = Date()
-            }
+        let log = upsertLog(for: habit, on: date, logs: logs, modelContext: modelContext)
+        if log.count >= habit.dailyGoal {
+            // Reset if already complete
+            log.count = 0
+            log.completedAt = nil
         } else {
-            let newLog = HabitLog(habitId: habit.id, date: date)
-            newLog.count = habit.dailyGoal
-            newLog.completedAt = Date()
-            modelContext.insert(newLog)
+            // Complete
+            log.count = habit.dailyGoal
+            log.completedAt = Date()
         }
-        try? modelContext.save()
+        save(modelContext)
     }
 
     func completeTimerHabit(_ habit: Habit, timerSeconds: Int, settings: AppSettings, logs: [HabitLog], modelContext: ModelContext) {
         let today = Date()
 
-        if let log = getLog(for: habit, on: today, logs: logs) {
-            log.count += 1
-            log.timerSeconds += timerSeconds
-            log.completedAt = Date()
-        } else {
-            let newLog = HabitLog(habitId: habit.id, date: today)
-            newLog.count = 1
-            newLog.timerSeconds = timerSeconds
-            newLog.completedAt = Date()
-            modelContext.insert(newLog)
-        }
+        let log = upsertLog(for: habit, on: today, logs: logs, modelContext: modelContext)
+        log.count += 1
+        log.timerSeconds += timerSeconds
+        log.completedAt = Date()
 
         // Update habit's timer duration for next time
         habit.currentTimerDuration += habit.timerIncrement
@@ -92,7 +73,7 @@ final class HabitsViewModel {
         // Update total timer seconds
         settings.totalTimerSeconds += timerSeconds
 
-        try? modelContext.save()
+        save(modelContext)
     }
 
     func deleteHabit(_ habit: Habit, logs: [HabitLog], modelContext: ModelContext) {
@@ -121,5 +102,18 @@ final class HabitsViewModel {
         guard !habits.isEmpty else { return 0 }
         let completed = habits.filter { isCompleted(habit: $0, on: date, logs: logs) }.count
         return Double(completed) / Double(habits.count)
+    }
+
+    private func upsertLog(for habit: Habit, on date: Date, logs: [HabitLog], modelContext: ModelContext) -> HabitLog {
+        if let log = getLog(for: habit, on: date, logs: logs) {
+            return log
+        }
+        let newLog = HabitLog(habitId: habit.id, date: date)
+        modelContext.insert(newLog)
+        return newLog
+    }
+
+    private func save(_ modelContext: ModelContext) {
+        try? modelContext.save()
     }
 }
