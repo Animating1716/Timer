@@ -242,12 +242,10 @@ struct HabitsView: View {
             count: count,
             preferences: habit.stretchPreferences,
             catalog: catalog,
-            cycleOrder: habit.stretchCycleOrder,
-            lastIndex: habit.lastStretchIndex
+            cycleState: habit.stretchCycleState
         )
         let exercises = selection.exercises
-        habit.stretchCycleOrder = selection.cycleOrder
-        habit.lastStretchIndex = selection.lastIndex
+        habit.stretchCycleState = selection.cycleState
         try? modelContext.save()
 
         let duration = max(5, habit.stretchDuration)

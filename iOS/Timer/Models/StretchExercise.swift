@@ -352,93 +352,140 @@ enum StretchCatalog {
         count: Int,
         preferences: [String: Int],
         catalog: StretchCatalogKind,
-        cycleOrder: [String],
-        lastIndex: Int
-    ) -> (exercises: [StretchExercise], cycleOrder: [String], lastIndex: Int) {
+        cycleState: StretchCycleState
+    ) -> (exercises: [StretchExercise], cycleState: StretchCycleState) {
         guard count > 0 else {
-            return ([], cycleOrder, lastIndex)
+            return ([], cycleState)
         }
 
         let catalogExercises = exercises(for: catalog)
-        let catalogIds = catalogExercises.map { $0.id }
+        guard !catalogExercises.isEmpty else {
+            return ([], cycleState)
+        }
+
+        var state = cycleState
+        if state.catalogId != catalog.rawValue {
+            state = StretchCycleState(catalogId: catalog.rawValue, groups: [:])
+        }
+
         let exerciseById = Dictionary(uniqueKeysWithValues: catalogExercises.map { ($0.id, $0) })
-
-        var orderIds = cycleOrder
-        var effectiveLastIndex = lastIndex
-
-        if !isValidCycleOrder(orderIds, catalogIds: catalogIds) {
-            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
-            effectiveLastIndex = -1
-        }
-
-        if orderIds.isEmpty {
-            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
-            effectiveLastIndex = -1
-        }
-
-        if effectiveLastIndex >= orderIds.count || effectiveLastIndex < -1 {
-            effectiveLastIndex = -1
-        }
+        let groupedExercises = groupExercises(catalogExercises, preferences: preferences)
+        state.groups = normalizeGroupStates(groups: groupedExercises, existing: state.groups)
 
         let target = min(count, catalogExercises.count)
         var selected: [StretchExercise] = []
-
-        var index = effectiveLastIndex + 1
-        if index >= orderIds.count {
-            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
-            index = 0
-        }
+        let weights = groupWeights(for: groupedExercises)
 
         for _ in 0..<target {
-            if index >= orderIds.count {
-                orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
-                index = 0
+            guard let level = pickLevel(from: weights) else { break }
+            let key = levelKey(level)
+
+            guard var groupState = state.groups[key],
+                  let group = groupedExercises[level],
+                  !group.isEmpty else {
+                continue
             }
 
-            if let exercise = exerciseById[orderIds[index]] {
+            let groupIds = group.map { $0.id }
+            if !isValidOrder(groupState.order, ids: groupIds) {
+                groupState.order = groupIds.shuffled()
+                groupState.index = -1
+            }
+
+            var nextIndex = groupState.index + 1
+            if nextIndex >= groupState.order.count {
+                groupState.order = groupIds.shuffled()
+                groupState.index = -1
+                nextIndex = 0
+            }
+
+            if let exercise = exerciseById[groupState.order[nextIndex]] {
                 selected.append(exercise)
             }
 
-            index += 1
+            groupState.index = nextIndex
+            state.groups[key] = groupState
         }
 
-        let updatedLastIndex = selected.isEmpty ? effectiveLastIndex : max(0, index - 1)
-
-        return (selected, orderIds, updatedLastIndex)
+        return (selected, state)
     }
 
-    private static func isValidCycleOrder(_ order: [String], catalogIds: [String]) -> Bool {
-        guard order.count == catalogIds.count else { return false }
-        return Set(order) == Set(catalogIds)
-    }
-
-    private static func weightedOrder(
-        from exercises: [StretchExercise],
+    private static func groupExercises(
+        _ exercises: [StretchExercise],
         preferences: [String: Int]
-    ) -> [StretchExercise] {
-        var available = exercises
-        var ordered: [StretchExercise] = []
+    ) -> [Int: [StretchExercise]] {
+        var groups: [Int: [StretchExercise]] = [:]
 
-        while !available.isEmpty {
-            let weights = available.map { exercise in
-                let bias = preferences[exercise.id] ?? 0
-                return max(1, 5 + bias)
-            }
-            let total = weights.reduce(0, +)
-            let roll = Int.random(in: 0..<total)
-            var cumulative = 0
-            var index = 0
-            for (i, weight) in weights.enumerated() {
-                cumulative += weight
-                if roll < cumulative {
-                    index = i
-                    break
-                }
-            }
-            ordered.append(available.remove(at: index))
+        for exercise in exercises {
+            let rawLevel = preferences[exercise.id] ?? 0
+            let level = max(Habit.stretchPreferenceMin, min(Habit.stretchPreferenceMax, rawLevel))
+            groups[level, default: []].append(exercise)
         }
 
-        return ordered
+        return groups
+    }
+
+    private static func normalizeGroupStates(
+        groups: [Int: [StretchExercise]],
+        existing: [String: StretchCycleGroupState]
+    ) -> [String: StretchCycleGroupState] {
+        var result: [String: StretchCycleGroupState] = [:]
+
+        for (level, exercises) in groups {
+            let key = levelKey(level)
+            let ids = exercises.map { $0.id }
+            var state = existing[key] ?? StretchCycleGroupState(order: [], index: -1)
+
+            if !isValidOrder(state.order, ids: ids) {
+                state.order = ids.shuffled()
+                state.index = -1
+            }
+
+            if state.index >= state.order.count || state.index < -1 {
+                state.index = -1
+            }
+
+            result[key] = state
+        }
+
+        return result
+    }
+
+    private static func groupWeights(for groups: [Int: [StretchExercise]]) -> [(level: Int, weight: Double)] {
+        groups.compactMap { level, exercises in
+            guard !exercises.isEmpty else { return nil }
+            let multiplier = frequencyMultiplier(for: level)
+            let weight = Double(exercises.count) * multiplier
+            return (level: level, weight: weight)
+        }
+    }
+
+    private static func frequencyMultiplier(for level: Int) -> Double {
+        let clamped = max(Habit.stretchPreferenceMin, min(Habit.stretchPreferenceMax, level))
+        return pow(1.25, Double(clamped))
+    }
+
+    private static func pickLevel(from weights: [(level: Int, weight: Double)]) -> Int? {
+        let total = weights.reduce(0.0) { $0 + $1.weight }
+        guard total > 0 else { return nil }
+        let roll = Double.random(in: 0..<total)
+        var cumulative = 0.0
+        for entry in weights {
+            cumulative += entry.weight
+            if roll < cumulative {
+                return entry.level
+            }
+        }
+        return weights.last?.level
+    }
+
+    private static func isValidOrder(_ order: [String], ids: [String]) -> Bool {
+        guard order.count == ids.count else { return false }
+        return Set(order) == Set(ids)
+    }
+
+    private static func levelKey(_ level: Int) -> String {
+        String(level)
     }
 
     static func nextExercise(after index: Int, catalog: StretchCatalogKind) -> (StretchExercise, Int) {
