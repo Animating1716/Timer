@@ -98,7 +98,7 @@ struct HabitsView: View {
             TimerView(timerVM: timerVM, habitsVM: habitsVM)
         }
         .onAppear {
-            ensureSettings()
+            AppSettings.ensure(in: modelContext)
         }
     }
 
@@ -258,13 +258,6 @@ struct HabitsView: View {
         )
     }
 
-    private func ensureSettings() {
-        if settingsArray.isEmpty {
-            let newSettings = AppSettings()
-            modelContext.insert(newSettings)
-            try? modelContext.save()
-        }
-    }
 }
 
 extension Notification.Name {

@@ -95,7 +95,7 @@ struct TimerView: View {
             )
         }
         .onAppear {
-            ensureSettings()
+            AppSettings.ensure(in: modelContext)
             timerVM.settings = settings
         }
         .onReceive(NotificationCenter.default.publisher(for: .timerCompleted)) { notification in
@@ -127,14 +127,6 @@ struct TimerView: View {
         }
         .disabled(timerVM.selectedHabit == nil)
         .opacity(timerVM.selectedHabit == nil ? 0.5 : 1)
-    }
-
-    private func ensureSettings() {
-        if settingsArray.isEmpty {
-            let newSettings = AppSettings()
-            modelContext.insert(newSettings)
-            try? modelContext.save()
-        }
     }
 
     private func handleTimerCompleted(_ notification: Notification) {

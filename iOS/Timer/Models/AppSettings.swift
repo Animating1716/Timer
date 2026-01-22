@@ -45,3 +45,16 @@ final class AppSettings {
         set { stretchCatalogId = newValue.rawValue }
     }
 }
+
+extension AppSettings {
+    @MainActor
+    static func ensure(in modelContext: ModelContext) {
+        let descriptor = FetchDescriptor<AppSettings>()
+        if let existing = try? modelContext.fetch(descriptor), !existing.isEmpty {
+            return
+        }
+        let newSettings = AppSettings()
+        modelContext.insert(newSettings)
+        try? modelContext.save()
+    }
+}

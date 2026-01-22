@@ -95,7 +95,7 @@ struct StretchSessionView: View {
             }
         }
         .onAppear {
-            ensureSettings()
+            AppSettings.ensure(in: modelContext)
             startTimer()
         }
         .onDisappear {
@@ -232,14 +232,6 @@ struct StretchSessionView: View {
         }
 
         try? modelContext.save()
-    }
-
-    private func ensureSettings() {
-        if settingsArray.isEmpty {
-            let newSettings = AppSettings()
-            modelContext.insert(newSettings)
-            try? modelContext.save()
-        }
     }
 
     private var feedbackList: some View {

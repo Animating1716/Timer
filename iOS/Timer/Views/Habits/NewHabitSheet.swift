@@ -335,15 +335,7 @@ struct HabitSettingsSheet: View {
         }
         .presentationDetents([.medium])
         .onAppear {
-            ensureSettings()
-        }
-    }
-
-    private func ensureSettings() {
-        if settingsArray.isEmpty {
-            let newSettings = AppSettings()
-            modelContext.insert(newSettings)
-            try? modelContext.save()
+            AppSettings.ensure(in: modelContext)
         }
     }
 }
