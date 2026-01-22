@@ -238,13 +238,16 @@ struct HabitsView: View {
     private func startStretch(for habit: Habit) {
         let count = max(1, habit.stretchExerciseCount)
         let catalog = settings?.stretchCatalog ?? .lifehack
-        let exercises = StretchCatalog.pickExercises(
+        let selection = StretchCatalog.pickExercises(
             count: count,
             preferences: habit.stretchPreferences,
-            catalog: catalog
+            catalog: catalog,
+            cycleOrder: habit.stretchCycleOrder,
+            lastIndex: habit.lastStretchIndex
         )
-        let catalogExercises = StretchCatalog.exercises(for: catalog)
-        habit.lastStretchIndex = exercises.isEmpty ? habit.lastStretchIndex : catalogExercises.firstIndex(where: { $0.id == exercises.last?.id }) ?? habit.lastStretchIndex
+        let exercises = selection.exercises
+        habit.stretchCycleOrder = selection.cycleOrder
+        habit.lastStretchIndex = selection.lastIndex
         try? modelContext.save()
 
         let duration = max(5, habit.stretchDuration)

@@ -351,14 +351,75 @@ enum StretchCatalog {
     static func pickExercises(
         count: Int,
         preferences: [String: Int],
-        catalog: StretchCatalogKind
-    ) -> [StretchExercise] {
-        guard count > 0 else { return [] }
-        var available = exercises(for: catalog)
-        var chosen: [StretchExercise] = []
-        let target = min(count, available.count)
+        catalog: StretchCatalogKind,
+        cycleOrder: [String],
+        lastIndex: Int
+    ) -> (exercises: [StretchExercise], cycleOrder: [String], lastIndex: Int) {
+        guard count > 0 else {
+            return ([], cycleOrder, lastIndex)
+        }
+
+        let catalogExercises = exercises(for: catalog)
+        let catalogIds = catalogExercises.map { $0.id }
+        let exerciseById = Dictionary(uniqueKeysWithValues: catalogExercises.map { ($0.id, $0) })
+
+        var orderIds = cycleOrder
+        var effectiveLastIndex = lastIndex
+
+        if !isValidCycleOrder(orderIds, catalogIds: catalogIds) {
+            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
+            effectiveLastIndex = -1
+        }
+
+        if orderIds.isEmpty {
+            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
+            effectiveLastIndex = -1
+        }
+
+        if effectiveLastIndex >= orderIds.count || effectiveLastIndex < -1 {
+            effectiveLastIndex = -1
+        }
+
+        let target = min(count, catalogExercises.count)
+        var selected: [StretchExercise] = []
+
+        var index = effectiveLastIndex + 1
+        if index >= orderIds.count {
+            orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
+            index = 0
+        }
 
         for _ in 0..<target {
+            if index >= orderIds.count {
+                orderIds = weightedOrder(from: catalogExercises, preferences: preferences).map { $0.id }
+                index = 0
+            }
+
+            if let exercise = exerciseById[orderIds[index]] {
+                selected.append(exercise)
+            }
+
+            index += 1
+        }
+
+        let updatedLastIndex = selected.isEmpty ? effectiveLastIndex : max(0, index - 1)
+
+        return (selected, orderIds, updatedLastIndex)
+    }
+
+    private static func isValidCycleOrder(_ order: [String], catalogIds: [String]) -> Bool {
+        guard order.count == catalogIds.count else { return false }
+        return Set(order) == Set(catalogIds)
+    }
+
+    private static func weightedOrder(
+        from exercises: [StretchExercise],
+        preferences: [String: Int]
+    ) -> [StretchExercise] {
+        var available = exercises
+        var ordered: [StretchExercise] = []
+
+        while !available.isEmpty {
             let weights = available.map { exercise in
                 let bias = preferences[exercise.id] ?? 0
                 return max(1, 5 + bias)
@@ -374,10 +435,10 @@ enum StretchCatalog {
                     break
                 }
             }
-            chosen.append(available.remove(at: index))
+            ordered.append(available.remove(at: index))
         }
 
-        return chosen
+        return ordered
     }
 
     static func nextExercise(after index: Int, catalog: StretchCatalogKind) -> (StretchExercise, Int) {

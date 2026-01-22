@@ -18,6 +18,7 @@ final class Habit {
     var stretchProgressive: Bool = false
     var stretchExerciseCount: Int = 1
     var stretchPreferenceJSON: String = "{}"
+    var stretchCycleOrderJSON: String = "[]"
     var lastStretchIndex: Int = -1
     var sortOrder: Int = 0
     var createdAt: Date = Date()
@@ -51,6 +52,7 @@ final class Habit {
         self.stretchProgressive = stretchProgressive
         self.stretchExerciseCount = stretchExerciseCount
         self.stretchPreferenceJSON = "{}"
+        self.stretchCycleOrderJSON = "[]"
         self.lastStretchIndex = -1
         self.sortOrder = sortOrder
         self.createdAt = Date()
@@ -80,6 +82,24 @@ final class Habit {
                 return
             }
             stretchPreferenceJSON = String(data: data, encoding: .utf8) ?? "{}"
+        }
+    }
+
+    var stretchCycleOrder: [String] {
+        get {
+            guard let data = stretchCycleOrderJSON.data(using: .utf8),
+                  let decoded = try? JSONDecoder().decode([String].self, from: data) else {
+                return []
+            }
+            return decoded
+        }
+        set {
+            guard let data = try? JSONEncoder().encode(newValue),
+                  let json = String(data: data, encoding: .utf8) else {
+                stretchCycleOrderJSON = "[]"
+                return
+            }
+            stretchCycleOrderJSON = json
         }
     }
 
