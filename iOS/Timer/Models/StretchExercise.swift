@@ -456,7 +456,8 @@ enum StretchCatalog {
         for groups: [Int: [StretchExercise]],
         frequencyMultiplier: Double
     ) -> [(level: Int, weight: Double)] {
-        groups.compactMap { level, exercises in
+        groups.compactMap { (entry) -> (level: Int, weight: Double)? in
+            let (level, exercises) = entry
             guard !exercises.isEmpty else { return nil }
             let multiplier = frequencyMultiplier(for: level, base: frequencyMultiplier)
             let weight = Double(exercises.count) * multiplier
