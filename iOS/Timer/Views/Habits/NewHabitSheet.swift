@@ -19,6 +19,7 @@ struct NewHabitSheet: View {
     @State private var stretchIncrement = 5
     @State private var stretchProgressive = false
     @State private var stretchExerciseCount = 1
+    @State private var stretchFrequencyMultiplier = 1.25
 
     var body: some View {
         NavigationStack {
@@ -95,13 +96,14 @@ struct NewHabitSheet: View {
                     }
                 }
 
-                StretchSettingsSection(
-                    enabled: $stretchEnabled,
-                    duration: $stretchDuration,
-                    progressive: $stretchProgressive,
-                    increment: $stretchIncrement,
-                    exerciseCount: $stretchExerciseCount
-                )
+        StretchSettingsSection(
+            enabled: $stretchEnabled,
+            duration: $stretchDuration,
+            progressive: $stretchProgressive,
+            increment: $stretchIncrement,
+            exerciseCount: $stretchExerciseCount,
+            frequencyMultiplier: $stretchFrequencyMultiplier
+        )
             }
             .navigationTitle("Neuer Habit")
             .navigationBarTitleDisplayMode(.inline)
@@ -136,6 +138,7 @@ struct NewHabitSheet: View {
             stretchIncrement: stretchIncrement,
             stretchProgressive: stretchProgressive,
             stretchExerciseCount: stretchExerciseCount,
+            stretchFrequencyMultiplier: stretchFrequencyMultiplier,
             sortOrder: habits.count
         )
 
@@ -240,7 +243,8 @@ struct EditHabitSheet: View {
                     duration: $habit.stretchDuration,
                     progressive: $habit.stretchProgressive,
                     increment: $habit.stretchIncrement,
-                    exerciseCount: $habit.stretchExerciseCount
+                    exerciseCount: $habit.stretchExerciseCount,
+                    frequencyMultiplier: $habit.stretchFrequencyMultiplier
                 )
 
                 Section {
@@ -397,6 +401,7 @@ private struct StretchSettingsSection: View {
     @Binding var progressive: Bool
     @Binding var increment: Int
     @Binding var exerciseCount: Int
+    @Binding var frequencyMultiplier: Double
 
     var body: some View {
         Section {
@@ -412,6 +417,13 @@ private struct StretchSettingsSection: View {
                 }
 
                 Stepper("Übungen pro Session: \(exerciseCount)", value: $exerciseCount, in: 1...6)
+
+                Stepper(
+                    "Häufigkeits-Multiplikator: \(frequencyMultiplier, specifier: "%.2f")x",
+                    value: $frequencyMultiplier,
+                    in: 1.0...1.6,
+                    step: 0.05
+                )
             }
         } header: {
             Text("Dehnungsübungen")

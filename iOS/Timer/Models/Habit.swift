@@ -17,6 +17,7 @@ final class Habit {
     var stretchIncrement: Int = 5
     var stretchProgressive: Bool = false
     var stretchExerciseCount: Int = 1
+    var stretchFrequencyMultiplier: Double = 1.25
     var stretchPreferenceJSON: String = "{}"
     var stretchCycleOrderJSON: String = "{}"
     var lastStretchIndex: Int = -1
@@ -36,6 +37,7 @@ final class Habit {
         stretchIncrement: Int = 5,
         stretchProgressive: Bool = false,
         stretchExerciseCount: Int = 1,
+        stretchFrequencyMultiplier: Double = 1.25,
         sortOrder: Int = 0
     ) {
         self.id = UUID()
@@ -51,6 +53,7 @@ final class Habit {
         self.stretchIncrement = stretchIncrement
         self.stretchProgressive = stretchProgressive
         self.stretchExerciseCount = stretchExerciseCount
+        self.stretchFrequencyMultiplier = stretchFrequencyMultiplier
         self.stretchPreferenceJSON = "{}"
         self.stretchCycleOrderJSON = "{}"
         self.lastStretchIndex = -1

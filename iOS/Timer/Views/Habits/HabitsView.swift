@@ -242,7 +242,8 @@ struct HabitsView: View {
             count: count,
             preferences: habit.stretchPreferences,
             catalog: catalog,
-            cycleState: habit.stretchCycleState
+            cycleState: habit.stretchCycleState,
+            frequencyMultiplier: habit.stretchFrequencyMultiplier
         )
         let exercises = selection.exercises
         habit.stretchCycleState = selection.cycleState

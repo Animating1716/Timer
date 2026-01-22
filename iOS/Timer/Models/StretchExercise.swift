@@ -352,7 +352,8 @@ enum StretchCatalog {
         count: Int,
         preferences: [String: Int],
         catalog: StretchCatalogKind,
-        cycleState: StretchCycleState
+        cycleState: StretchCycleState,
+        frequencyMultiplier: Double
     ) -> (exercises: [StretchExercise], cycleState: StretchCycleState) {
         guard count > 0 else {
             return ([], cycleState)
@@ -374,7 +375,7 @@ enum StretchCatalog {
 
         let target = min(count, catalogExercises.count)
         var selected: [StretchExercise] = []
-        let weights = groupWeights(for: groupedExercises)
+        let weights = groupWeights(for: groupedExercises, frequencyMultiplier: frequencyMultiplier)
 
         for _ in 0..<target {
             guard let level = pickLevel(from: weights) else { break }
@@ -451,18 +452,22 @@ enum StretchCatalog {
         return result
     }
 
-    private static func groupWeights(for groups: [Int: [StretchExercise]]) -> [(level: Int, weight: Double)] {
+    private static func groupWeights(
+        for groups: [Int: [StretchExercise]],
+        frequencyMultiplier: Double
+    ) -> [(level: Int, weight: Double)] {
         groups.compactMap { level, exercises in
             guard !exercises.isEmpty else { return nil }
-            let multiplier = frequencyMultiplier(for: level)
+            let multiplier = frequencyMultiplier(for: level, base: frequencyMultiplier)
             let weight = Double(exercises.count) * multiplier
             return (level: level, weight: weight)
         }
     }
 
-    private static func frequencyMultiplier(for level: Int) -> Double {
+    private static func frequencyMultiplier(for level: Int, base: Double) -> Double {
         let clamped = max(Habit.stretchPreferenceMin, min(Habit.stretchPreferenceMax, level))
-        return pow(1.25, Double(clamped))
+        let safeBase = max(1.0, min(2.0, base))
+        return pow(safeBase, Double(clamped))
     }
 
     private static func pickLevel(from weights: [(level: Int, weight: Double)]) -> Int? {
